@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 #include "DeckOfCards.h"
 #include "Game.h"
 #include "Character.h"
@@ -7,12 +7,11 @@
 Game *game = nullptr;
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event event;
-// static int pass = 0;
-
-
+int passNum = 0;
 
 int main(int argc, char *argv[])
 {
+
     const int FPS = 60;
     const int frameDelay = 1000 / FPS;
     Uint32 frameStart;
@@ -44,6 +43,7 @@ int main(int argc, char *argv[])
 
     int whoTurn = game->whoPlayFirst();
     cout << whoTurn << " play first" << endl;
+    int preValue = -5;
     while (game->running())
     {
         frameStart = SDL_GetTicks();
@@ -62,14 +62,14 @@ int main(int argc, char *argv[])
         GameObject passButton("res/pass.png", 200, 200);
         playButton.RenderButton(500, 500, 200, 70);
         passButton.RenderButton(800, 500, 200, 70);
-        
-        int preValue = -5;
 
         bool isPlayed = false;
-        if(whoTurn != 3) {
-            preValue = character[whoTurn].botPlayCard(preValue, whoTurn);
+
+        if (whoTurn != 3)
+        {
+            preValue = character[whoTurn].botPlayCard(preValue, whoTurn, passNum);
             isPlayed = true;
-        } 
+        }
 
         while (SDL_PollEvent(&event) != 0)
         {
@@ -82,27 +82,42 @@ int main(int argc, char *argv[])
                 break;
             }
 
-            if (whoTurn == 3) {
+            if (whoTurn == 3)
+            {
                 player4.checkEvent(event);
                 // preValue = player4.playerPlayCard(preValue, whoTurn);
                 int type = player4.isPlayedCard(preValue, event, playButton.isClicked(event), passButton.isClicked(event));
-                if(type!=-1) {
-                    cout << "PreValue: " << preValue << endl;
-                    cout << "Type is: " << type << endl;
-                }
-                
-                if(type == 1) {
+                // if(type!=-1) {
+                //     cout << "PreValue: " << preValue << endl;
+                //     cout << "Type is: " << type << endl;
+                // }
+
+                if (type == 1)
+                {
                     preValue = player4.playerPlayCard(preValue, event);
-                    isPlayed = true;
+                    isPlayed = true; //isPassed
+                }
+                if (type == 3)
+                {
+                    isPlayed = true; //isPassed
+                    passNum++;
+                    cout << "Pass " << passNum << endl;
+                    if (passNum == 3)
+                    {
+                        // whoTurn = (whoTurn + 1) % 4;
+                        preValue = -5;
+                    }
+                    if (passNum > 3)
+                        passNum = 1;
                 }
             }
         }
 
-        if(isPlayed) {
-            whoTurn = (whoTurn+1)%4;
+        if (isPlayed)
+        {
+            whoTurn = (whoTurn + 1) % 4;
         }
-        //cout << whoTurn << ": " << endl;
-        // character[3].playCard(-5, event);
+        // cout << whoTurn << ": " << endl;
 
         player1.printCard();
         player2.printCard();
@@ -113,15 +128,10 @@ int main(int argc, char *argv[])
         SDL_RenderClear(Game::renderer);
         // game->update();
         // game->render(d);
-
-        // while(!player1.runOutOfCard() && !player1.runOutOfCard() && !player1.runOutOfCard() && !player1.runOutOfCard()) {
-
-        // }
-
-
         frameTime = SDL_GetTicks() - frameStart;
-        if(frameDelay > frameTime) {
-            SDL_Delay(frameDelay-frameTime);
+        if (frameDelay > frameTime)
+        {
+            SDL_Delay(frameDelay - frameTime);
         }
     }
 
@@ -129,3 +139,6 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// bot1 bot2 bot3 player
+// value1 pass pass++ pass++ value1 pass play->pass : 0

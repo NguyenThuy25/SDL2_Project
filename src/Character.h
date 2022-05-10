@@ -7,6 +7,7 @@
 #include "DeckOfCards.h"
 using namespace std;
 
+
 class Character : public GameObject
 {
 private:
@@ -23,7 +24,6 @@ private:
         {700, 700, 700, 700, 700, 700, 700, 700, 700, 700}};
 
 public:
-    int pass = 0;
     // std::vector<Card*> hand;
     // int pass;
     vector<Card> hand;
@@ -47,14 +47,14 @@ public:
     int isPlayedCard(int preValue, SDL_Event event, bool playButtonIsClicked, bool passButtonIsClicked) {
         bool isCardIsClicked = false;
         bool valid = false;
-        if(playButtonIsClicked) cout << "play Button is Clicked !!!!" << endl;
+        // if(playButtonIsClicked) cout << "play Button is Clicked !!!!" << endl;
         for (int i = 0; i < hand.size(); i++)
         {
             if (hand[i].isSelected())
             {
-                cout << "Card is clicked \n";
+                // cout << "Card is clicked \n";
                 isCardIsClicked = true;
-                if(hand[i].value - preValue >= 4) valid = true;
+                if(hand[i].value/4 > preValue/4) valid = true;
                 break;
             }
         }
@@ -69,6 +69,7 @@ public:
             if(passButtonIsClicked) return 3;
             return 0;
         } 
+        if(passButtonIsClicked) return 3;
         return -1;
     }
 
@@ -83,7 +84,7 @@ public:
             {
                 Card playedCard3(hand[i].path);
                 // SDL_Delay(100);
-                playedCard3.RenderButton(400, 300, 150, 200);
+                playedCard3.RenderButton(400,500, 150, 200);
                 value = hand[i].value;
                 hand.erase(hand.begin() + i);
                 cout << "player play card " << value << endl;
@@ -93,58 +94,71 @@ public:
 
         return value;
     }
-    int botPlayCard(int preValue, int whoTurn)
+    int botPlayCard(int preValue, int& whoTurn, int& passNum)
     {
         int value = preValue;
+        bool justPlayed = false;
         cout << "preValue" << preValue << endl;
         for (int i = 0; i < hand.size(); i++)
         {
-            if ((hand[i].value - preValue) >= 4)
+            if (hand[i].value/4 > preValue/4)
             {
                 Card botPlayedCard(hand[i].path);
                 switch (indexOfPlayer)
                 {
                 case 0:
-                    botPlayedCard.RenderButton(400, 300, 150, 200);
-                    if (hand.size() != 0)
-                    {
+                    cout << "bot0 play card " << hand[i].value << endl; 
+                    botPlayedCard.RenderButton(200, 300, 150, 200);
+                    // if (hand.size() != 0)
+                    // {
+                        justPlayed = true;
+                        passNum = 0;
                         value = hand[i].value;
                         hand.erase(hand.begin() + i);
-                    }
+                    // }
                     break;
                 case 1:
-                    botPlayedCard.RenderButton(300, 300, 150, 200);
-                    if (hand.size() != 0)
-                    {
+                    cout << "bot1 play card " << hand[i].value << endl; 
+                    botPlayedCard.RenderButton(500, 200, 150, 200);
+                    // if (hand.size() != 0)
+                    // {
+                        justPlayed = true;
+                        passNum = 0;
                         value = hand[i].value;
                         hand.erase(hand.begin() + i);
-                    }
+                    // }
                     break;
                 case 2:
-                    botPlayedCard.RenderButton(300, 300, 150, 200);
-                    if (hand.size() != 0)
-                    {
+                    cout << "bot2 play card " << hand[i].value << endl; 
+                    botPlayedCard.RenderButton(800, 300, 150, 200);
+                    // if (hand.size() != 0)
+                    // {
+                        justPlayed = true;
+                        passNum = 0;
                         value = hand[i].value;
                         hand.erase(hand.begin() + i);
-                    }
+                    // }
                     break;
                 default:
                     break;
                 }
+                // cout << "Bot play card " << value << endl;
             }
-            
-            break;
+            if(justPlayed) break;
         }
-        cout << "Bot play card " << value << endl;
+        
         if (value == preValue)
         {
-            cout << "Pass" << endl;
-            // if (pass == 3)
-            //     whoTurn = whoTurn - 3;
-            // else if (pass > 3)
-            //     pass = 1;
+            passNum++;
+            cout << "Pass "  << passNum << endl;
+            if (passNum == 3) {
+                // whoTurn = (whoTurn + 1)%4;
+                value = -5;
+            }
+            if (passNum > 3) 
+                passNum = 1;
             // else
-            //     pass++;
+                // passNum++;
         }
         return value;
     }

@@ -50,6 +50,7 @@ void GameObject::RenderButton(int xButton, int yButton, int widthButton, int hei
     destRect.w = srcRect.w;
     destRect.h = srcRect.h;
     SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
+    SDL_Delay(200);
 }
 bool GameObject::isClicked(SDL_Event event)
 {
@@ -70,7 +71,7 @@ bool GameObject::isClicked(SDL_Event event)
         }
     }
     if (event.type == SDL_MOUSEBUTTONDOWN && inSide) {
-        cout << "clicked" << endl;
+        // cout << "clicked" << endl;
         return true;
     }
     return false;

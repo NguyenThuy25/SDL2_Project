@@ -27,6 +27,10 @@ public:
 			isUp = false;
 		}
 	}
+
+	bool isSelected() {
+		return isUp;
+	}
 	
 	void moveUp() {
 		while(destRect.y > 300) {

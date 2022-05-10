@@ -1,5 +1,6 @@
 #include "Character.h"
 #include"Game.h"
+#include<iostream>
 
 Character::Character() {
 
@@ -10,8 +11,8 @@ Character::Character(int _indexOfPlayer, DeckOfCards& _deck) {
         Card tmp = _deck.getCard();
         tmp.setPos(xpos[indexOfPlayer][i], ypos[indexOfPlayer][i]);
         tmp.path = cardGraphics[tmp.value];
-
         hand.push_back(tmp);
+        
     }
 }
 
@@ -38,7 +39,9 @@ void Character::sort() {
             }
         }
     }
-
+    for(int i=0; i<hand.size(); i++) {
+        std::cout << hand[i].value << " ";
+    }
 }
 Character::~Character() {
     

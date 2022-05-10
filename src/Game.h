@@ -24,7 +24,7 @@ public:
     }
 
     static SDL_Renderer *renderer;
-    int numOfPlayerLeft = 4;
+    // int numOfPlayerLeft = 4;
 
     int whoPlayFirst() {
         return rand()%4;

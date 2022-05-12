@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         // check if any player is win (run out of card)
         for (int i = 0; i < 4; i++)
         {
-            if (character[i].runOutOfCard() != 0)
+            if (player1.runOutOfCard() != 0 || player2.runOutOfCard() != 0 || player3.runOutOfCard() != 0 || player4.runOutOfCard() != 0)
             {
                 game->stop();
                 cout << "player " << i << " win";
@@ -67,25 +67,25 @@ int main(int argc, char *argv[])
 
         if (whoTurn != 3)
         {
-            // switch (whoTurn)
-            // {
-            // case 0:
-            //     preValue = player1.botPlayCard(preValue, whoTurn, passNum);
-            //     isPlayed = true;
-            //     break;
-            // case 1:
-            //     preValue = player2.botPlayCard(preValue, whoTurn, passNum);
-            //     isPlayed = true;
-            //     break;
-            // case 2:
-            //     preValue = player2.botPlayCard(preValue, whoTurn, passNum);
-            //     isPlayed = true;
-            //     break;
-            // default:
-            //     break;
-            // }
-            preValue = character[whoTurn].botPlayCard(preValue, whoTurn, passNum);
-            isPlayed = true;
+            switch (whoTurn)
+            {
+            case 0:
+                preValue = player1.botPlayCard(preValue, whoTurn, passNum);
+                isPlayed = true;
+                break;
+            case 1:
+                preValue = player2.botPlayCard(preValue, whoTurn, passNum);
+                isPlayed = true;
+                break;
+            case 2:
+                preValue = player3.botPlayCard(preValue, whoTurn, passNum);
+                isPlayed = true;
+                break;
+            default:
+                break;
+            }
+            // preValue = character[whoTurn].botPlayCard(preValue, whoTurn, passNum);
+            // isPlayed = true;
         }
 
         while (SDL_PollEvent(&event) != 0)

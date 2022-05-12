@@ -7,7 +7,6 @@
 #include "DeckOfCards.h"
 using namespace std;
 
-
 class Character : public GameObject
 {
 private:
@@ -44,7 +43,8 @@ public:
     //     }
     // }
 
-    int isPlayedCard(int preValue, SDL_Event event, bool playButtonIsClicked, bool passButtonIsClicked) {
+    int isPlayedCard(int preValue, SDL_Event event, bool playButtonIsClicked, bool passButtonIsClicked)
+    {
         bool isCardIsClicked = false;
         bool valid = false;
         // if(playButtonIsClicked) cout << "play Button is Clicked !!!!" << endl;
@@ -54,26 +54,34 @@ public:
             {
                 // cout << "Card is clicked \n";
                 isCardIsClicked = true;
-                if(hand[i].value/4 > preValue/4) valid = true;
+                if (hand[i].value / 4 > preValue / 4)
+                    valid = true;
                 break;
             }
         }
-        if(isCardIsClicked) {
-            if(playButtonIsClicked) {
-                if(valid) {
+        if (isCardIsClicked)
+        {
+            if (playButtonIsClicked)
+            {
+                if (valid)
+                {
                     return 1;
-                } else {
+                }
+                else
+                {
                     return 2;
                 }
-            } 
-            if(passButtonIsClicked) return 3;
+            }
+            if (passButtonIsClicked)
+                return 3;
             return 0;
-        } 
-        if(passButtonIsClicked) return 3;
+        }
+        if (passButtonIsClicked)
+            return 3;
         return -1;
     }
 
-    int playerPlayCard(int preValue, SDL_Event event, int& passNum)
+    int playerPlayCard(int preValue, SDL_Event event, int &passNum)
     {
         // cout<< "playerPlayCard is running";
         int value = preValue;
@@ -84,7 +92,7 @@ public:
             {
                 Card playedCard3(hand[i].path);
                 // SDL_Delay(100);
-                playedCard3.RenderButton(400,500, 150, 200);
+                playedCard3.RenderButton(400, 500, 150, 200);
                 value = hand[i].value;
                 hand.erase(hand.begin() + i);
                 cout << "player play card " << value << endl;
@@ -97,89 +105,67 @@ public:
     }
 
     // add delete card function every time bot play a card
-    int botPlayCard(int preValue, int& whoTurn, int& passNum)
+    int botPlayCard(int preValue, int &whoTurn, int &passNum)
     {
         int value = preValue;
         bool justPlayed = false;
         cout << "preValue" << preValue << endl;
-        // fixxxxxxxxx
-        cout << hand.size() << endl;
+        cout << "Bot " << whoTurn << " play card ";
         for (int i = 0; i < hand.size(); i++)
         {
-            if ((hand[i].value/4) > (preValue/4))
+            if ((hand[i].value / 4) > (preValue / 4))
             {
                 Card botPlayedCard(hand[i].path);
+                cout << hand[i].value << endl;
                 // switch (indexOfPlayer)
-                switch(whoTurn)
+                switch (whoTurn)
                 {
                 case 0:
-                    cout << "bot0 play card " << hand[i].value << endl; 
                     botPlayedCard.RenderButton(200, 300, 150, 200);
-                    // if (hand.size() != 0)
-                    // {
-                        justPlayed = true;
-                        passNum = 0;
-                        value = hand[i].value;
-                        hand.erase(hand.begin() + i);
-                        // hand[i].value = 0;
-                    // }
                     break;
-                case 1:
-                    cout << "bot1 play card " << hand[i].value << endl; 
+                case 1: 
                     botPlayedCard.RenderButton(500, 200, 150, 200);
-                    // if (hand.size() != 0)
-                    // {
-                        justPlayed = true;
-                        passNum = 0;
-                        value = hand[i].value;
-                        hand.erase(hand.begin() + i);
-                        // hand[i].value = 0;
-                    // }
                     break;
                 case 2:
-                    cout << "bot2 play card " << hand[i].value << endl; 
                     botPlayedCard.RenderButton(800, 300, 150, 200);
-                    // if (hand.size() != 0)
-                    // {
-                        justPlayed = true;
-                        passNum = 0;
-                        value = hand[i].value;
-                        hand.erase(hand.begin() + i);
-                        // hand[i].value = 0;
-                    // }
+                default:
                     break;
-                // default:
-                    // break;
                 }
-                // cout << "Bot play card " << value << endl;
+                
+                SDL_Delay(200);
+                justPlayed = true;
+                passNum = 0;
+                value = hand[i].value;
+                hand.erase(hand.begin() + i);
             }
             if(justPlayed) break;
         }
-        
-        // if (value == preValue)
-        if(justPlayed == false)
-        {
-            passNum++;
-            cout << "Pass "  << passNum << endl;
-            if (passNum == 3) {
-                // whoTurn = (whoTurn + 1)%4;
-                value = -5;
-            }
-            if (passNum > 3) 
-                passNum = 1;
-            // else
-                // passNum++;
-        }
-        return value;
-    }
 
-    bool runOutOfCard()
-    {
-        if (hand.size() == 0)
-            return true;
-        else
-            return false;
-    }
-    ~Character();
-};
+            // if (value == preValue)
+            if (justPlayed == false)
+            {
+                passNum++;
+                cout << "Pass " << passNum << endl;
+                if (passNum == 3)
+                {
+                    // whoTurn = (whoTurn + 1)%4;
+                    value = -5;
+                }
+                if (passNum > 3)
+                    passNum = 1;
+                // else
+                // passNum++;
+            }
+            return value;
+        }
+
+        bool runOutOfCard()
+        {
+            if (hand.size() == 0)
+                return true;
+            else
+                return false;
+        }
+        ~Character();
+    };
 #endif // CHARACTER_H

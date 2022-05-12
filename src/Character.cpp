@@ -43,6 +43,7 @@ void Character::sort() {
         std::cout << hand[i].value << " ";
     }
 }
+
 Character::~Character() {
     
 }

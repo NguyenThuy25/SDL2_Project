@@ -11,7 +11,7 @@ public:
 	int value;
 	std::string path;
 	// std::string texturesheet;
-	bool isUp = false, goStraight = false;
+	bool isUp = false, goStraight = false, choosen = false;
 	Card(){}
 	Card(string path) : GameObject(path, 0, 0) {
 	}

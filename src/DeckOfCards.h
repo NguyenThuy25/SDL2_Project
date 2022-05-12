@@ -27,17 +27,12 @@ public:
     
 
     std::vector<Card> deck;
-    // Class Character ; bot, player :: Char
-    // tao class nguoi choi + thao tac
-    // tao class bot + thao tac
 
     DeckOfCards();
-    // DeckOfCards(vector<Card>& _deck, vector<Card>& _bot1, vector<Card>& _bot2, vector<Card>& _bot3, vector<Card>& _player);
     void shuffle();
+
     Card getCard();
 
-    // void handCard(std::vector<Character*> characters);
     ~DeckOfCards();
-    // void printCard();
 };
 #endif // DECKOFCARD_H

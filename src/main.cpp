@@ -67,6 +67,23 @@ int main(int argc, char *argv[])
 
         if (whoTurn != 3)
         {
+            // switch (whoTurn)
+            // {
+            // case 0:
+            //     preValue = player1.botPlayCard(preValue, whoTurn, passNum);
+            //     isPlayed = true;
+            //     break;
+            // case 1:
+            //     preValue = player2.botPlayCard(preValue, whoTurn, passNum);
+            //     isPlayed = true;
+            //     break;
+            // case 2:
+            //     preValue = player2.botPlayCard(preValue, whoTurn, passNum);
+            //     isPlayed = true;
+            //     break;
+            // default:
+            //     break;
+            // }
             preValue = character[whoTurn].botPlayCard(preValue, whoTurn, passNum);
             isPlayed = true;
         }
@@ -94,12 +111,12 @@ int main(int argc, char *argv[])
 
                 if (type == 1)
                 {
-                    preValue = player4.playerPlayCard(preValue, event);
-                    isPlayed = true; //isPassed
+                    preValue = player4.playerPlayCard(preValue, event, passNum);
+                    isPlayed = true; // isPassed
                 }
                 if (type == 3)
                 {
-                    isPlayed = true; //isPassed
+                    isPlayed = true; // isPassed
                     passNum++;
                     cout << "Pass " << passNum << endl;
                     if (passNum == 3)

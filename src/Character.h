@@ -73,7 +73,7 @@ public:
         return -1;
     }
 
-    int playerPlayCard(int preValue, SDL_Event event)
+    int playerPlayCard(int preValue, SDL_Event event, int& passNum)
     {
         // cout<< "playerPlayCard is running";
         int value = preValue;
@@ -88,23 +88,29 @@ public:
                 value = hand[i].value;
                 hand.erase(hand.begin() + i);
                 cout << "player play card " << value << endl;
+
                 break;
             }
         }
 
         return value;
     }
+
+    // add delete card function every time bot play a card
     int botPlayCard(int preValue, int& whoTurn, int& passNum)
     {
         int value = preValue;
         bool justPlayed = false;
         cout << "preValue" << preValue << endl;
+        // fixxxxxxxxx
+        cout << hand.size() << endl;
         for (int i = 0; i < hand.size(); i++)
         {
-            if (hand[i].value/4 > preValue/4)
+            if ((hand[i].value/4) > (preValue/4))
             {
                 Card botPlayedCard(hand[i].path);
-                switch (indexOfPlayer)
+                // switch (indexOfPlayer)
+                switch(whoTurn)
                 {
                 case 0:
                     cout << "bot0 play card " << hand[i].value << endl; 
@@ -115,6 +121,7 @@ public:
                         passNum = 0;
                         value = hand[i].value;
                         hand.erase(hand.begin() + i);
+                        // hand[i].value = 0;
                     // }
                     break;
                 case 1:
@@ -126,6 +133,7 @@ public:
                         passNum = 0;
                         value = hand[i].value;
                         hand.erase(hand.begin() + i);
+                        // hand[i].value = 0;
                     // }
                     break;
                 case 2:
@@ -137,17 +145,19 @@ public:
                         passNum = 0;
                         value = hand[i].value;
                         hand.erase(hand.begin() + i);
+                        // hand[i].value = 0;
                     // }
                     break;
-                default:
-                    break;
+                // default:
+                    // break;
                 }
                 // cout << "Bot play card " << value << endl;
             }
             if(justPlayed) break;
         }
         
-        if (value == preValue)
+        // if (value == preValue)
+        if(justPlayed == false)
         {
             passNum++;
             cout << "Pass "  << passNum << endl;

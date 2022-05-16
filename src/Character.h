@@ -2,10 +2,10 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 #include "GameObject.h"
-#include "Card.h"
 #include <vector>
 #include "DeckOfCards.h"
 #include "Pair.h"
+#include "Three.h"
 #include "Play.h"
 using namespace std;
 
@@ -29,38 +29,142 @@ public:
     // int pass;
     vector<Card> hand;
     vector<Pair> pair;
+    vector<Three> three;
     int indexOfPlayer; // 0->bot1 1->bot2 2->bot3 3->player
     Character();
     Character(int _indexOfPlayer, DeckOfCards &_deck);
     void printCard();
     void checkEvent(SDL_Event e);
     void sort();
-    void putPair() {
+
+    void putPair()
+    {
         pair.clear();
-        for(int i=0; i<hand.size()-1; i++) {
-            if(hand[i].value/4 == hand[i+1].value/4) {
+        for(int i=0; i<hand.size(); i++) {
+            hand[i].choosen = false;
+        }
+        for (int i = 0; i < hand.size() - 1; i++)
+        {
+            if ((hand[i].value / 4 == hand[i + 1].value / 4) && hand[i].choosen == false && hand[i + 1].choosen == false)
+            {
                 hand[i].choosen = true;
-                hand[i+1].choosen = true;
-                Pair tmp(hand[i], hand[i+1]);
+                hand[i + 1].choosen = true;
+                Pair tmp(hand[i], hand[i + 1]);
                 pair.push_back(tmp);
+                // cout << "pair: " << hand[i].value << "+" << hand[i + 1].value << endl;
             }
         }
     }
 
-    int isPlayedCard(int preValue, SDL_Event event, bool playButtonIsClicked, bool passButtonIsClicked)
+    void putThree() {
+        three.clear();
+        for(int i=0; i<hand.size(); i++) {
+            hand[i].choosen = false;
+        }
+        for(int i=0; i<hand.size()-2; i++) {
+            if((hand[i].value / 4 == hand[i+1].value /4) && (hand[i+1].value/4 == hand[i+2].value/4) && hand[i].choosen == false && hand[i+1].choosen == false)
+            {
+                hand[i].choosen = false;
+                hand[i+1].choosen = false;
+                hand[i+2].choosen = false;
+                Three tmp(hand[i], hand[i+1], hand[i+2]);
+                three.push_back(tmp);
+            }
+        }
+    }
+    void eraseByValue(int value)
     {
-        bool isCardIsClicked = false;
-        bool valid = false;
         for (int i = 0; i < hand.size(); i++)
         {
-            if (hand[i].isSelected())
+            if (hand[i].value == value)
             {
-                isCardIsClicked = true;
-                if (hand[i].value / 4 > preValue / 4)
-                    valid = true;
+                hand.erase(hand.begin() + i);
+                // hand.erase(hand.begin() + i);
                 break;
             }
         }
+    }
+
+    void popOut() {
+        for(int i=0; i<hand.size(); i++) {
+            if(hand[i].value == -2) {
+                hand.erase(hand.begin() + i);
+                i--;
+            }
+        }
+        cout << "size of hand" << hand.size() << endl;
+        if(hand.size() >= 2) {
+            putThree();
+            putPair();
+        }
+        
+    }
+    int isPlayedCard(Play& pre, SDL_Event& event, bool playButtonIsClicked, bool passButtonIsClicked)
+    {
+        if (pre.maxCard < 0) {
+            pre.kindcode = 1;
+            for(int i=0; i<hand.size()-2; i++) {
+                if(hand[i].isSelected() && hand[i+1].isSelected() && !hand[i+2].isSelected()) {
+                    pre.kindcode = 2;
+                }
+            }
+            for (int i = 0; i < hand.size()-2; i++) {
+                if(hand[i].isSelected() && hand[i+1].isSelected() && hand[i+2].isSelected()) {
+                    pre.kindcode = 3;
+                }
+            }
+        }
+
+        bool isCardIsClicked = false;
+        bool valid = false;
+
+        // cout << "kindcode: " << pre.kindcode << endl;
+        
+        switch (pre.kindcode)
+        {
+        case 1:
+            for (int i = 0; i < hand.size(); i++)
+            {
+                if (hand[i].isSelected())
+                {
+                    isCardIsClicked = true;
+                    if (hand[i].value / 4 > pre.maxCard / 4)
+                        valid = true;
+                    break;
+                }
+            }
+            break;
+        case 2:
+            for (int i = 0; i < pair.size(); i++)
+            {
+                // error here!!!
+                if (pair[i].p1->isSelected() && pair[i].p2->isSelected())
+                {
+                    // cout << "isCardIsClickded == true " << endl;
+                    isCardIsClicked = true;
+                    if ((pair[i].p2->value / 4) > (pre.maxCard / 4))
+                    {
+                        valid = true;
+                    }
+                    break;
+                }
+            }
+            break;
+        case 3:
+            for(int i=0; i<three.size(); i++) {
+                if(three[i].t[0]->isSelected() && three[i].t[1]->isSelected() && three[i].t[2]->isSelected()) {
+                    isCardIsClicked = true;
+                    if((three[i].maxCard->value / 4) > (pre.maxCard / 4)) {
+                        valid = true;
+                    }
+                    break;
+                }
+                
+            }
+            break;
+        }
+        
+
         if (isCardIsClicked)
         {
             if (playButtonIsClicked)
@@ -83,178 +187,249 @@ public:
         return -1;
     }
 
-    int playerPlayCard(int preValue, SDL_Event event, int &passNum)
+    Play playerPlayCard(Play play, SDL_Event event, int &passNum)
     {
-        // cout<< "playerPlayCard is running";
-        int value = preValue;
-        // cout << hand.size();
-        for (int i = 0; i < hand.size(); i++)
+        switch (play.kindcode)
         {
-            if (hand[i].isSelected())
+        case 1:
+            for (int i = 0; i < hand.size(); i++)
             {
-                Card playedCard3(hand[i].path);
-                // SDL_Delay(100);
-                playedCard3.RenderButton(400, 500, 150, 200);
-                value = hand[i].value;
-                hand.erase(hand.begin() + i);
-                cout << "player play card " << value << endl;
+                if (hand[i].isSelected())
+                {
+                    passNum = 0;
+                    Card playedCard3(hand[i].path);
+                    playedCard3.RenderButton(400, 500, 150, 200);
+                    play.maxCard = hand[i].value;
+                    cout << "player play single card " << hand[i].value << endl;
+                    hand[i].value = -2; // every card that have value -2 will be pop out
+                    
+                    break;
+                }
+            }
+            break;
+        case 2:
+            for (int i = 0; i < pair.size(); i++)
+            {
+                if (pair[i].p1->isSelected() && pair[i].p2->isSelected())
+                {
+                    passNum = 0;
+                    Card playedPair1(pair[i].p1->path);
+                    Card playedPair2(pair[i].p1->path);
+                    playedPair1.RenderButton(400, 500, 150, 200);
+                    playedPair1.RenderButton(450, 500, 150, 200);
+                    play.maxCard = pair[i].p2->value;
+                    cout << "player play pair " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
+                    pair[i].p1->value = -2;
+                    pair[i].p2->value = -2;
+                    pair.erase(pair.begin() + i);
+                    // eraseByValue(value1);
+                    // eraseByValue(value2);                   
+                     
+                    break;
+                }
+            }
+            break;
+        case 3:
+            for(int i=0; i<three.size(); i++) {
+                if(three[i].t[0]->isSelected() && three[i].t[1]->isSelected() && three[i].t[2]->isSelected()) {
+                    passNum = 0;
+                    Card playedThree1(three[i].t[0]->path);
+                    Card playedThree2(three[i].t[1]->path);
+                    Card playedThree3(three[i].t[2]->path);
+                    playedThree1.RenderButton(400, 500, 150, 200);
+                    playedThree2.RenderButton(450, 500, 150, 200);
+                    playedThree3.RenderButton(500, 500, 150, 200);  
+                    play.maxCard = three[i].maxCard->value;
+                    cout << "player plays three " << three[i].t[0]->value << " + " << three[i].t[1]->value << " + " << three[i] .t[2]->value << endl;  
+                    three[i].t[0]->value = -2;
+                    three[i].t[1]->value = -2;
+                    three[i].t[2]->value = -2;
+                    three.erase(three.begin() + i);
 
-                break;
             }
         }
-
-        return value;
-    }
-    void eraseByValue(int value) {
-        for(int i=0; i<hand.size(); i++) {
-            if(hand[i].value == value) {
-                hand.erase(hand.begin()+i);
-            }
         }
+        return play;
     }
-    int botPlaySingleCard(int preValue, int &whoTurn, int &passNum)
+
+    // add function
+    void classify()
     {
-        int value = preValue;
-        bool justPlayed = false;
-        cout << "preValue" << preValue << endl;
-        cout << "Bot " << whoTurn << " play card ";
-        for (int i = 0; i < hand.size(); i++)
-        {
-            if ((hand[i].value / 4) > (preValue / 4))
-            {
-                Card botPlayedCard(hand[i].path);
-                cout << hand[i].value << endl;
-                // switch (indexOfPlayer)
-                switch (whoTurn)
-                {
-                case 0:
-                    botPlayedCard.RenderButton(200, 300, 150, 200);
-                    break;
-                case 1: 
-                    botPlayedCard.RenderButton(500, 200, 150, 200);
-                    break;
-                case 2:
-                    botPlayedCard.RenderButton(800, 300, 150, 200);
-                default:
-                    break;
-                }
-                
-                SDL_Delay(200);
-                justPlayed = true;
-                passNum = 0;
-                value = hand[i].value;
-                hand.erase(hand.begin() + i);
-            }
-            if(justPlayed) break;
-        }
-
-            // if (value == preValue)
-            if (justPlayed == false)
-            {
-                passNum++;
-                cout << "Pass " << passNum << endl;
-                if (passNum == 3)
-                {
-                    // whoTurn = (whoTurn + 1)%4;
-                    value = -5;
-                }
-                if (passNum > 3)
-                    passNum = 1;
-                // else
-                // passNum++;
-            }
-            return value;
-        }
-
-    
-    Pair botPlayPair(Pair prev, int& whoTurn, int& passNum) {
-        Pair value = prev;
-        // int value = prev.maxCard->value;
-        bool justPlayed = false;
-        // cout << "preValue" << preValue << endl;
-        cout << "Bot " << whoTurn << " play pair " << endl;
-        for (int i = 0; i < pair.size(); i++)
-        {
-            if ((pair[i].p1->value) - (prev.p2->value) > 1)
-            {
-                Card botPlayedPair1(pair[i].p1->path);
-                Card botPlayedPair2(pair[i].p2->path);
-                cout << pair[i].p1->value << " + " << pair[i].p2->value << endl;
-                // switch (indexOfPlayer)
-                switch (whoTurn)
-                {
-                case 0:
-                    botPlayedPair1.RenderButton(200, 300, 150, 200);
-                    botPlayedPair2.RenderButton(250, 300, 150, 200);
-                    break;
-                case 1: 
-                    botPlayedPair1.RenderButton(500, 200, 150, 200);
-                    botPlayedPair2.RenderButton(550, 200, 150, 200);
-                    break;
-                case 2:
-                    botPlayedPair1.RenderButton(800, 300, 150, 200);
-                    botPlayedPair2.RenderButton(850, 300, 150, 200);
-                default:
-                    break;
-                }
-                
-                SDL_Delay(300);
-                justPlayed = true;
-                passNum = 0;
-                Pair tmp(*(pair[i].p1), *(pair[i].p2));
-                value = tmp;
-                // cout << "Pair tmp " << tmp.p1->value << " " << tmp.p2->value << endl;
-                // value = hand[i].value;
-                pair.erase(pair.begin() + i);
-                
-                eraseByValue(pair[i].p1->value);
-                eraseByValue(pair[i].p2->value);
-            }
-            if(justPlayed) break;
-        }
-
-            // if (value == preValue)
-            if (justPlayed == false)
-            {
-                passNum++;
-                cout << "Pass " << passNum << endl;
-                if (passNum == 3)
-                {
-                    // whoTurn = (whoTurn + 1)%4;
-                    value.p1->value = -5;
-                    value.p2->value = -5;
-                }
-                if (passNum > 3)
-                    passNum = 1;
-                // else
-                // passNum++;
-            }
-            return value;
-    }
-
-// add function
-    void classify() {
         putPair();
     }
-    // Play playCardAI(Play in) {
-    //     classify();
-    //     switch(in.kindcode) {
-    //         case 1: // If the card last player play Single 
-    //         {
-                
-    //         }
-    //     }
-    // }
 
-
-
-        bool runOutOfCard()
+    Play playCardAI(Play pre, int &whoTurn, int &passNum)
+    {
+        bool justPlayed = false;
+        cout << "kindcode " << pre.kindcode << endl;
+        switch (pre.kindcode)
         {
-            if (hand.size() == 0)
-                return true;
-            else
-                return false;
+        case 1: // single card
+            for (int i = 0; i < hand.size(); i++)
+            {
+                if (((hand[i].value / 4) > (pre.maxCard / 4)) && hand[i].choosen == 0)
+                {
+                    Card botPlayedCard(hand[i].path);
+                    // switch (indexOfPlayer)
+                    switch (whoTurn)
+                    {
+                    case 0:
+                        botPlayedCard.RenderButton(200, 300, 150, 200);
+                        break;
+                    case 1:
+                        botPlayedCard.RenderButton(500, 200, 150, 200);
+                        break;
+                    case 2:
+                        botPlayedCard.RenderButton(800, 300, 150, 200);
+                    default:
+                        break;
+                    }
+
+                    SDL_Delay(200);
+                    justPlayed = true;
+                    passNum = 0;
+                    pre.maxCard = hand[i].value;
+                    cout << "bot " << whoTurn << " plays single card " << hand[i].value << endl;
+                    hand[i].value = -2;
+                }
+                if (justPlayed)
+                    break;
+            }
+        break;
+        case 2: // pair
+//         cout << "pair of bot before plays" << whoTurn << " : ";
+//         for(int i=0; i<pair.size(); i++) {
+// cout << pair[i].p1->value << " + " << pair[i].p2->value  << ", ";
+//         }
+            for (int i = 0; i < pair.size(); i++)
+            {
+                        
+                
+
+                if ((pair[i].p2->value / 4) > (pre.maxCard /4) /* && pair[i].choosen = false */)
+                {
+                    Card botPlayPair1(pair[i].p1->path);
+                    Card botPlayPair2(pair[i].p2->path);
+                    switch (whoTurn)
+                    {
+                    case 0:
+                        botPlayPair1.RenderButton(200, 300, 150, 200);
+                        botPlayPair2.RenderButton(250, 300, 150, 200);
+                        break;
+                    case 1:
+                        botPlayPair1.RenderButton(500, 200, 150, 200);
+                        botPlayPair2.RenderButton(550, 200, 150, 200);
+                        break;
+                    case 2:
+                        botPlayPair1.RenderButton(800, 300, 150, 200);
+                        botPlayPair2.RenderButton(850, 300, 150, 200);
+                    default:
+                        break;
+                    }
+
+                    SDL_Delay(200);
+                    justPlayed = true;
+                    passNum = 0;
+                    pre.maxCard = pair[i].p2->value;
+                    cout << "bot plays pair " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
+                    // int value1 = pair[i].p1->value;
+                    // int value2 = pair[i].p2->value;
+
+                    // pair[i].p1->value = -2;
+                    // pair[i].p2->value = -2;
+                    pair[i].p1->value = -2;
+                    pair[i].p2->value = -2;
+                    pair.erase(pair.begin() + i);
+                    // eraseByValue(value1);
+                    // eraseByValue(value2); 
+                    // cout << "erase " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
+                    
+                }
+                if (justPlayed)
+                    break;
+            }
+            break;
+        case 3: //three
+        cout << "three of bot before plays" << whoTurn << " : ";
+        for(int i=0; i<three.size(); i++) {
+            cout << three[i].t[0]->value << " + " << three[i].t[1]->value  << " + " << three[i].t[2] << ", ";
         }
-        ~Character();
-    };
+            for (int i = 0; i < three.size(); i++)
+            {
+                if ((three[i].maxCard->value / 4) > (pre.maxCard /4) /* && pair[i].choosen = false */)
+                {
+                    Card botPlayThree1(three[i].t[0]->path);
+                    Card botPlayThree2(three[i].t[1]->path);
+                    Card botPlayThree3(three[i].t[2]->path);
+                    switch (whoTurn)
+                    {
+                    case 0:
+                        botPlayThree1.RenderButton(200, 300, 150, 200);
+                        botPlayThree2.RenderButton(250, 300, 150, 200);
+                        botPlayThree3.RenderButton(300, 300, 150, 200);
+
+                        break;
+                    case 1:
+                        botPlayThree1.RenderButton(500, 200, 150, 200);
+                        botPlayThree2.RenderButton(550, 200, 150, 200);
+                        botPlayThree3.RenderButton(600, 200, 150, 200);
+                        break;
+                    case 2:
+                        botPlayThree1.RenderButton(800, 300, 150, 200);
+                        botPlayThree2.RenderButton(850, 300, 150, 200);
+                        botPlayThree3.RenderButton(900, 300, 150, 200);
+                        break;
+
+                    default:
+                        break;
+                    }
+
+                    SDL_Delay(200);
+                    justPlayed = true;
+                    passNum = 0;
+                    pre.maxCard = three[i].maxCard->value;
+                    cout << "bot plays three " << three[i].t[0]->value << " + " << three[i].t[1]->value << " + " << three[i].t[2]->value << endl;
+                    // int value1 = pair[i].p1->value;
+                    // int value2 = pair[i].p2->value;
+
+                    // pair[i].p1->value = -2;
+                    // pair[i].p2->value = -2;
+                    three[i].t[0]->value = -2;
+                    three[i].t[1]->value = -2;
+                    three[i].t[2]->value = -2;
+                    three.erase(three.begin() + i);
+                    // eraseByValue(value1);
+                    // eraseByValue(value2); 
+                    // cout << "erase " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
+                    
+                }
+                if (justPlayed)
+                    break;
+            }
+            break;
+
+        }
+        if (justPlayed == false)
+        {
+            passNum++;
+            cout << "Pass " << passNum << endl;
+            if (passNum == 3)
+            {
+                pre.maxCard = -5;
+            }
+            if (passNum > 3)
+                passNum = 1;
+        }
+        return pre;
+    }
+
+    bool runOutOfCard()
+    {
+        if (hand.size() == 0)
+            return true;
+        else
+            return false;
+    }
+    ~Character();
+};
 #endif // CHARACTER_H

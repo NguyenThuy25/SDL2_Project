@@ -15,6 +15,7 @@ public:
     GameObject(std::string texturesheet, int _x, int _y);
     void Update();
     void Render();
+    // void RenderFull();
     void RenderButton(int xButton, int yButton, int widthButton, int heightButton);
     void setPos(int _x, int _y){
         x = _x;
@@ -25,7 +26,7 @@ public:
     SDL_Rect getRect() { 
         return destRect; 
     }
-    bool isClicked(SDL_Event event);
+    bool isClicked(SDL_Event event, int cardOrButton);
     int x;
     int y;
     ~GameObject();

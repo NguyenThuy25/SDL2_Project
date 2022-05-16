@@ -1,5 +1,4 @@
 #include <iostream>
-#include "DeckOfCards.h"
 #include "Game.h"
 #include "Character.h"
 
@@ -7,10 +6,10 @@ Game *game = nullptr;
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event event;
 int passNum = 0;
+Play play;
 
 int main(int argc, char *argv[])
 {
-
     const int FPS = 60;
     const int frameDelay = 1000 / FPS;
     Uint32 frameStart;
@@ -25,18 +24,22 @@ int main(int argc, char *argv[])
     Character player1(0, deckOfCard); //  tay
     player1.sort();
     player1.putPair();
+    player1.putThree();
     cout << endl;
     Character player2(1, deckOfCard); //  bac
     player2.sort();
     player2.putPair();
+    player1.putThree();
     cout << endl;
     Character player3(2, deckOfCard); // dong
     player3.sort();
     player3.putPair();
+    player1.putThree();
     cout << endl;
     Character player4(3, deckOfCard); // nam
     player4.sort();
     player4.putPair();
+    player1.putThree();
     cout << endl;
 
     character.push_back(player1);
@@ -46,12 +49,8 @@ int main(int argc, char *argv[])
 
     int whoTurn = game->whoPlayFirst();
     cout << whoTurn << " play first" << endl;
-    int preValue = -5;
-    Card prep1;
-    Card prep2;
-    prep1.value = 0;
-    prep2.value = 0;
-    Pair prePair(prep1, prep2);
+    play.maxCard = -5;
+
     while (game->running())
     {
         frameStart = SDL_GetTicks();
@@ -62,6 +61,7 @@ int main(int argc, char *argv[])
             {
                 game->stop();
                 cout << "player " << i << " win";
+                game->stop();
             }
         }
         // game->handleEvents(event) ;
@@ -71,65 +71,73 @@ int main(int argc, char *argv[])
         passButton.RenderButton(800, 500, 200, 70);
 
         bool isPlayed = false;
-        // player1.botPlayPair(player1.pair[0], whoTurn, passNum);
 
-
-
-
-        whoTurn = 0;
+        
         if (whoTurn != 3)
         {
             switch (whoTurn)
             {
             case 0:
-                if (player1.pair.size() == 0)
-                {
-                    preValue = player1.botPlaySingleCard(preValue, whoTurn, passNum);
+                if (play.maxCard < 0) {
+                    if(player1.three.size() != 0) {
+                        play.kindcode = 3;
+                    }
+                    else if (player1.pair.size() != 0) {
+                        play.kindcode = 2;
+                    }
+                    else {
+                        play.kindcode = 1;
+                    }
                 }
-                else
-                {   
-                    prePair = player1.botPlayPair(prePair, whoTurn, passNum);
-                }
+                play = player1.playCardAI(play, whoTurn, passNum);
+                player1.popOut();
                 isPlayed = true;
                 break;
             case 1:
-                if (player2.pair.size() == 0)
-                {
-                    preValue = player2.botPlaySingleCard(preValue, whoTurn, passNum);
+                if (play.maxCard < 0) {
+                    if(player2.three.size() != 0) {
+                        play.kindcode = 3;
+                    }
+                    else if (player2.pair.size() != 0) {
+                        play.kindcode = 2;
+                    }
+                    else {
+                        play.kindcode = 1;
+                    }
                 }
-                else
-                {
-                    prePair = player2.botPlayPair(prePair, whoTurn, passNum);
-                }
+
+                play = player2.playCardAI(play, whoTurn, passNum);
+                // cout << "deck of cards before pop out : "; 
+                // for(int i=0; i<player2.hand.size(); i++) {
+                //     cout << &player2.hand[i] << " ";
+                // }
+                // cout << endl;
+                
+                player2.popOut();
+                // cout << "deck of cards after pop out : "; 
+                // for(int i=0; i<player2.hand.size(); i++) {
+                //     cout << &player2.hand[i] << " ";
+                // }
                 isPlayed = true;
                 break;
             case 2:
-                if (player3.pair.size() == 0)
-                {
-                    preValue = player3.botPlaySingleCard(preValue, whoTurn, passNum);
+                if (play.maxCard < 0) {
+                    if(player3.three.size() != 0) {
+                        play.kindcode = 3;
+                    }
+                    else if (player3.pair.size() != 0) {
+                        play.kindcode = 2;
+                    }
+                    else {
+                        play.kindcode = 1;
+                    }
                 }
-                else
-                {
-                    prePair = player3.botPlayPair(prePair, whoTurn, passNum);
-                }
+        
+                play = player3.playCardAI(play, whoTurn, passNum);
+                player3.popOut();
                 isPlayed = true;
-                break;
-            case 3:
-                if (player4.pair.size() == 0)
-                {
-                    preValue = player4.botPlaySingleCard(preValue, whoTurn, passNum);
-                }
-                else
-                {
-                    prePair = player4.botPlayPair(prePair, whoTurn, passNum);
-                }
-                isPlayed = true;
-                break;
-            default:
                 break;
             }
-            // preValue = character[whoTurn].botPlayCard(preValue, whoTurn, passNum);
-            // isPlayed = true;
         }
 
         while (SDL_PollEvent(&event) != 0)
@@ -146,16 +154,11 @@ int main(int argc, char *argv[])
             if (whoTurn == 3)
             {
                 player4.checkEvent(event);
-                // preValue = player4.playerPlayCard(preValue, whoTurn);
-                int type = player4.isPlayedCard(preValue, event, playButton.isClicked(event), passButton.isClicked(event));
-                // if(type!=-1) {
-                //     cout << "PreValue: " << preValue << endl;
-                //     cout << "Type is: " << type << endl;
-                // }
-
+                int type = player4.isPlayedCard(play, event, playButton.isClicked(event, 2), passButton.isClicked(event, 2));
                 if (type == 1)
                 {
-                    preValue = player4.playerPlayCard(preValue, event, passNum);
+                    play = player4.playerPlayCard(play, event, passNum);
+                    player4.popOut();
                     isPlayed = true; // isPassed
                 }
                 if (type == 3)
@@ -165,20 +168,18 @@ int main(int argc, char *argv[])
                     cout << "Pass " << passNum << endl;
                     if (passNum == 3)
                     {
-                        // whoTurn = (whoTurn + 1) % 4;
-                        preValue = -5;
+                        play.maxCard = -5;
                     }
                     if (passNum > 3)
                         passNum = 1;
                 }
             }
         }
-
         if (isPlayed)
         {
             whoTurn = (whoTurn + 1) % 4;
         }
-        cout << whoTurn << ": " << endl;
+        // cout << whoTurn << "'s turn " << endl;
 
         player1.printCard();
         player2.printCard();
@@ -200,3 +201,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+

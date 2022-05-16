@@ -24,7 +24,7 @@ void Character::printCard() {
 }
 void Character::checkEvent(SDL_Event e) {
         for(int i=0; i<hand.size(); i++) {
-            if(hand[i].isClicked(e)) hand[i].up();
+            if(hand[i].isClicked(e, 1)) hand[i].up();
         }
     }
 void Character::sort() {
@@ -48,37 +48,3 @@ Character::~Character() {
     
 }
 
-
-/*
-#include "Character.h"
-#include<iostream>
-Character::Character() {
-
-}
-Character::Character(int _index, DeckOfCards _deck) {
-    index = _index;
-    for(int i=0; i<10; i++) {
-        Card tmp = _deck.getCard();
-        // std::cout << tmp.value << " ";
-        tmp.setPos(xpos[index][i], ypos[index][i]);
-        hand.push_back(tmp);
-    }
-}
-
-void Character::printCard() {
-    // for(Card c : hand) {
-    //     c.Render();
-    //     std::cout << c.x << " ";
-    // }
-    for(int i=0; i<10; i++) {
-        hand[i].Render();
-        // std::cout << hand[i].x << " ";
-    }
-    
-}
-
-Character::~Character() {
-    
-}
-
-*/

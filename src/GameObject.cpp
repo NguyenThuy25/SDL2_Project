@@ -36,7 +36,9 @@ void GameObject::Render() {
     SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
     // SDL_RenderCopyEx(Game::renderer, objTexture, &srcRect, &destRect, 0, NULL, SDL_FLIP_NONE);
 }
-
+// void GameObject::RenderFull() {
+//     SDL_RenderCopy(Game::renderer, objTexture, NULL, NULL);
+// }
 void GameObject::RenderButton(int xButton, int yButton, int widthButton, int heightButton) {
     x = 0;
     y = 0;
@@ -52,14 +54,15 @@ void GameObject::RenderButton(int xButton, int yButton, int widthButton, int hei
     SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
     SDL_Delay(200);
 }
-bool GameObject::isClicked(SDL_Event event)
+bool GameObject::isClicked(SDL_Event event, int cardOrButton)
 {
-    
+    // int cardOrButton: 1->card ; 2->button
     if (event.type == SDL_MOUSEMOTION) {
         int x_m = event.motion.x;
         int y_m = event.motion.y;
         // cout << "mouse: " << x_m << " " << y_m << endl; 
-        if (x_m > getRect().x && x_m < getRect().x + getRect().w/2
+        if(cardOrButton == 1) {
+            if (x_m > getRect().x && x_m < getRect().x + getRect().w/2
             && y_m > getRect().y && y_m < getRect().y + getRect().h)
         {
             inSide = true;
@@ -69,6 +72,19 @@ bool GameObject::isClicked(SDL_Event event)
             inSide = false;
             return false;
         }
+        } else {
+            if (x_m > getRect().x && x_m < getRect().x + getRect().w
+            && y_m > getRect().y && y_m < getRect().y + getRect().h)
+        {
+            inSide = true;
+        }
+        else
+        {
+            inSide = false;
+            return false;
+        }
+        }
+        
     }
     if (event.type == SDL_MOUSEBUTTONDOWN && inSide) {
         // cout << "clicked" << endl;

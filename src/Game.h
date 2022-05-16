@@ -29,7 +29,6 @@ public:
     int whoPlayFirst() {
         return rand()%4;
     }
-   
 
 private:
     bool isRunning;

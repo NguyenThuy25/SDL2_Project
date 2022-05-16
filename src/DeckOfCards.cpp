@@ -9,6 +9,7 @@ DeckOfCards::DeckOfCards() {
     for(int i = 0; i < DECK_SIZE-1; i++) {
         Card t(cardGraphics[i]);
         t.value = i;
+        t.choosen=false;
         deck.push_back(t);
     }
 }

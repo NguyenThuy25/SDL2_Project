@@ -8,7 +8,7 @@ Pair::Pair(){
 	// p2=&b;
 }
 
-Pair::Pair(Card &a,Card &b)
+Pair::Pair(Card& a,Card& b)
 {
 	if(a.value - b.value < 4)
     {

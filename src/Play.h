@@ -3,7 +3,7 @@
 
 // #include <iostream>
 // #include <string>
-#include "Card.h"
+// #include "Character.h"
 #include "Pair.h"
 // #include "Single.h"
 // #include "Three.h"
@@ -12,9 +12,9 @@
 #include <vector>
 using namespace std;
 
-class Play{
+class Play {
 	public:
-        Card maxCard;
+        int maxCard;
         int kindcode;
         Play();
         // Play(Single);

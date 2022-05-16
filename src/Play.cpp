@@ -2,9 +2,7 @@
 // #include <string>
 // #include <vector>
 // #include <cstdlib>
-#include "Card.h"
 #include "Play.h"
-#include "Pair.h"
 // #include "Single.h"
 using namespace std;
 
@@ -25,8 +23,8 @@ Play::Play()
 Play::Play(Pair a)
 {
     kindcode=2;
-    maxCard=*(a.maxCard);
-}
+    maxCard = a.p2->value;
+} 
 
 // Play::Play(int a,int b)
 // {

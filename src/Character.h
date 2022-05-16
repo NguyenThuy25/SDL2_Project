@@ -72,18 +72,18 @@ public:
             }
         }
     }
-    void eraseByValue(int value)
-    {
-        for (int i = 0; i < hand.size(); i++)
-        {
-            if (hand[i].value == value)
-            {
-                hand.erase(hand.begin() + i);
-                // hand.erase(hand.begin() + i);
-                break;
-            }
-        }
-    }
+    // void eraseByValue(int value)
+    // {
+    //     for (int i = 0; i < hand.size(); i++)
+    //     {
+    //         if (hand[i].value == value)
+    //         {
+    //             hand.erase(hand.begin() + i);
+    //             // hand.erase(hand.begin() + i);
+    //             break;
+    //         }
+    //     }
+    // }
 
     void popOut() {
         for(int i=0; i<hand.size(); i++) {
@@ -92,7 +92,7 @@ public:
                 i--;
             }
         }
-        cout << "size of hand" << hand.size() << endl;
+        // cout << "size of hand" << hand.size() << endl;
         if(hand.size() >= 2) {
             putThree();
             putPair();
@@ -103,22 +103,22 @@ public:
     {
         if (pre.maxCard < 0) {
             pre.kindcode = 1;
-            for(int i=0; i<hand.size()-2; i++) {
-                if(hand[i].isSelected() && hand[i+1].isSelected() && !hand[i+2].isSelected()) {
-                    pre.kindcode = 2;
-                }
-            }
             for (int i = 0; i < hand.size()-2; i++) {
                 if(hand[i].isSelected() && hand[i+1].isSelected() && hand[i+2].isSelected()) {
                     pre.kindcode = 3;
+                    break;
                 }
+                if(hand[i].isSelected() && hand[i+1].isSelected() && !hand[i+2].isSelected()) {
+                    pre.kindcode = 2;
+                }
+                
+                
             }
+            
         }
 
         bool isCardIsClicked = false;
         bool valid = false;
-
-        // cout << "kindcode: " << pre.kindcode << endl;
         
         switch (pre.kindcode)
         {
@@ -152,8 +152,10 @@ public:
             break;
         case 3:
             for(int i=0; i<three.size(); i++) {
+                cout << " three shoud be played";
                 if(three[i].t[0]->isSelected() && three[i].t[1]->isSelected() && three[i].t[2]->isSelected()) {
                     isCardIsClicked = true;
+                    
                     if((three[i].maxCard->value / 4) > (pre.maxCard / 4)) {
                         valid = true;
                     }
@@ -202,7 +204,8 @@ public:
                     play.maxCard = hand[i].value;
                     cout << "player play single card " << hand[i].value << endl;
                     hand[i].value = -2; // every card that have value -2 will be pop out
-                    
+                    // don't need this but still add to try
+                    play.kindcode = 1;
                     break;
                 }
             }
@@ -214,16 +217,18 @@ public:
                 {
                     passNum = 0;
                     Card playedPair1(pair[i].p1->path);
-                    Card playedPair2(pair[i].p1->path);
+                    Card playedPair2(pair[i].p2->path);
                     playedPair1.RenderButton(400, 500, 150, 200);
-                    playedPair1.RenderButton(450, 500, 150, 200);
+                    playedPair2.RenderButton(450, 500, 150, 200);
                     play.maxCard = pair[i].p2->value;
+
+                    // don't need this but still add to try
+                    play.kindcode = 2;
+
                     cout << "player play pair " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
                     pair[i].p1->value = -2;
                     pair[i].p2->value = -2;
-                    pair.erase(pair.begin() + i);
-                    // eraseByValue(value1);
-                    // eraseByValue(value2);                   
+                    pair.erase(pair.begin() + i);                
                      
                     break;
                 }
@@ -240,6 +245,9 @@ public:
                     playedThree2.RenderButton(450, 500, 150, 200);
                     playedThree3.RenderButton(500, 500, 150, 200);  
                     play.maxCard = three[i].maxCard->value;
+
+                    // don't need this but still add to try
+                    play.kindcode = 3;
                     cout << "player plays three " << three[i].t[0]->value << " + " << three[i].t[1]->value << " + " << three[i] .t[2]->value << endl;  
                     three[i].t[0]->value = -2;
                     three[i].t[1]->value = -2;
@@ -261,7 +269,6 @@ public:
     Play playCardAI(Play pre, int &whoTurn, int &passNum)
     {
         bool justPlayed = false;
-        cout << "kindcode " << pre.kindcode << endl;
         switch (pre.kindcode)
         {
         case 1: // single card
@@ -289,6 +296,8 @@ public:
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = hand[i].value;
+                    // don't need this but still add to try
+                    pre.kindcode = 1;
                     cout << "bot " << whoTurn << " plays single card " << hand[i].value << endl;
                     hand[i].value = -2;
                 }
@@ -297,15 +306,8 @@ public:
             }
         break;
         case 2: // pair
-//         cout << "pair of bot before plays" << whoTurn << " : ";
-//         for(int i=0; i<pair.size(); i++) {
-// cout << pair[i].p1->value << " + " << pair[i].p2->value  << ", ";
-//         }
             for (int i = 0; i < pair.size(); i++)
             {
-                        
-                
-
                 if ((pair[i].p2->value / 4) > (pre.maxCard /4) /* && pair[i].choosen = false */)
                 {
                     Card botPlayPair1(pair[i].p1->path);
@@ -331,7 +333,9 @@ public:
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = pair[i].p2->value;
-                    cout << "bot plays pair " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
+                    // don't need this but still add to try
+                    pre.kindcode = 2;
+                    cout << "bot " << whoTurn << " plays pair " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
                     // int value1 = pair[i].p1->value;
                     // int value2 = pair[i].p2->value;
 
@@ -350,10 +354,6 @@ public:
             }
             break;
         case 3: //three
-        cout << "three of bot before plays" << whoTurn << " : ";
-        for(int i=0; i<three.size(); i++) {
-            cout << three[i].t[0]->value << " + " << three[i].t[1]->value  << " + " << three[i].t[2] << ", ";
-        }
             for (int i = 0; i < three.size(); i++)
             {
                 if ((three[i].maxCard->value / 4) > (pre.maxCard /4) /* && pair[i].choosen = false */)
@@ -388,19 +388,15 @@ public:
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = three[i].maxCard->value;
+                    // don't need this but still add to try
+                    pre.kindcode = 3;
                     cout << "bot plays three " << three[i].t[0]->value << " + " << three[i].t[1]->value << " + " << three[i].t[2]->value << endl;
-                    // int value1 = pair[i].p1->value;
-                    // int value2 = pair[i].p2->value;
-
-                    // pair[i].p1->value = -2;
-                    // pair[i].p2->value = -2;
+                    
                     three[i].t[0]->value = -2;
                     three[i].t[1]->value = -2;
                     three[i].t[2]->value = -2;
                     three.erase(three.begin() + i);
-                    // eraseByValue(value1);
-                    // eraseByValue(value2); 
-                    // cout << "erase " << pair[i].p1->value << " + " << pair[i].p2->value << endl;
+                    
                     
                 }
                 if (justPlayed)

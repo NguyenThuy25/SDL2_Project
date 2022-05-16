@@ -38,6 +38,8 @@ void Game::init(const char *title, int x, int y, int w, int h, bool fullscreen)
     
 }
 
+void Game::setUp() {}
+
 void Game::handleEvents(SDL_Event event)
 {
     while (SDL_PollEvent(&event) != 0) {

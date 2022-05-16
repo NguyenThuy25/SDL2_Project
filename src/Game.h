@@ -13,7 +13,7 @@ public:
     ~Game();
     
     void init(const char* title, int x, int y, int w, int h, bool fullscreen);
-    
+    void setUp();
     void handleEvents(SDL_Event event);
     void update();
     void render();

@@ -5,20 +5,21 @@
 Game *game = nullptr;
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event event;
+DeckOfCards deckOfCard;
 int passNum = 0;
 Play play;
 
 int main(int argc, char *argv[])
 {
-    const int FPS = 60;
-    const int frameDelay = 1000 / FPS;
-    Uint32 frameStart;
-    int frameTime;
+    // const int FPS = 60;
+    // const int frameDelay = 1000 / FPS;
+    // Uint32 frameStart;
+    // int frameTime;
 
     game = new Game();
     game->init("BIG TWO GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 840, false);
 
-    DeckOfCards deckOfCard;
+    
     deckOfCard.shuffle();
     vector<Character> character;
     Character player1(0, deckOfCard); //  tay
@@ -29,17 +30,17 @@ int main(int argc, char *argv[])
     Character player2(1, deckOfCard); //  bac
     player2.sort();
     player2.putPair();
-    player1.putThree();
+    player2.putThree();
     cout << endl;
     Character player3(2, deckOfCard); // dong
     player3.sort();
     player3.putPair();
-    player1.putThree();
+    player3.putThree();
     cout << endl;
     Character player4(3, deckOfCard); // nam
     player4.sort();
     player4.putPair();
-    player1.putThree();
+    player4.putThree();
     cout << endl;
 
     character.push_back(player1);
@@ -50,17 +51,14 @@ int main(int argc, char *argv[])
     int whoTurn = game->whoPlayFirst();
     cout << whoTurn << " play first" << endl;
     play.maxCard = -5;
-
     while (game->running())
     {
-        frameStart = SDL_GetTicks();
+        // frameStart = SDL_GetTicks();
         // check if any player is win (run out of card)
         for (int i = 0; i < 4; i++)
         {
             if (player1.runOutOfCard() != 0 || player2.runOutOfCard() != 0 || player3.runOutOfCard() != 0 || player4.runOutOfCard() != 0)
             {
-                game->stop();
-                cout << "player " << i << " win";
                 game->stop();
             }
         }
@@ -107,17 +105,7 @@ int main(int argc, char *argv[])
                 }
 
                 play = player2.playCardAI(play, whoTurn, passNum);
-                // cout << "deck of cards before pop out : "; 
-                // for(int i=0; i<player2.hand.size(); i++) {
-                //     cout << &player2.hand[i] << " ";
-                // }
-                // cout << endl;
-                
                 player2.popOut();
-                // cout << "deck of cards after pop out : "; 
-                // for(int i=0; i<player2.hand.size(); i++) {
-                //     cout << &player2.hand[i] << " ";
-                // }
                 isPlayed = true;
                 break;
             case 2:
@@ -190,11 +178,11 @@ int main(int argc, char *argv[])
         SDL_RenderClear(Game::renderer);
         // game->update();
         // game->render(d);
-        frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime)
-        {
-            SDL_Delay(frameDelay - frameTime);
-        }
+        // frameTime = SDL_GetTicks() - frameStart;
+        // if (frameDelay > frameTime)
+        // {
+        //     SDL_Delay(frameDelay - frameTime);
+        // }
     }
 
     game->clean();

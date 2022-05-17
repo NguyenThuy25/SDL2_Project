@@ -5,7 +5,6 @@
 Game *game = nullptr;
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event event;
-DeckOfCards deckOfCard;
 int passNum = 0;
 Play play;
 
@@ -19,7 +18,8 @@ int main(int argc, char *argv[])
     game = new Game();
     game->init("BIG TWO GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 840, false);
 
-    
+    DeckOfCards deckOfCard;
+
     deckOfCard.shuffle();
     vector<Character> character;
     Character player1(0, deckOfCard); //  tay
@@ -138,11 +138,12 @@ int main(int argc, char *argv[])
             default:
                 break;
             }
-
+            cout << "whoTurn of the last " << whoTurn << endl;
             if (whoTurn == 3)
             {
                 player4.checkEvent(event);
                 int type = player4.isPlayedCard(play, event, playButton.isClicked(event, 2), passButton.isClicked(event, 2));
+                cout << "type of player " << type << endl;
                 if (type == 1)
                 {
                     play = player4.playerPlayCard(play, event, passNum);

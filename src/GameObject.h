@@ -26,7 +26,7 @@ public:
     SDL_Rect getRect() { 
         return destRect; 
     }
-    bool isClicked(SDL_Event event, int cardOrButton);
+    bool isClicked(SDL_Event& event, int cardOrButton);
     int x;
     int y;
     ~GameObject();

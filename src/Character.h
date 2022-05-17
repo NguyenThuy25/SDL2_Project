@@ -88,6 +88,7 @@ public:
     void popOut() {
         for(int i=0; i<hand.size(); i++) {
             if(hand[i].value == -2) {
+                // hand[i].isUp = false;
                 hand.erase(hand.begin() + i);
                 i--;
             }
@@ -103,7 +104,8 @@ public:
     {
         if (pre.maxCard < 0) {
             pre.kindcode = 1;
-            for (int i = 0; i < hand.size()-2; i++) {
+            if(hand.size() >2) {
+                for (int i = 0; i < hand.size()-2; i++) {
                 if(hand[i].isSelected() && hand[i+1].isSelected() && hand[i+2].isSelected()) {
                     pre.kindcode = 3;
                     break;
@@ -111,15 +113,16 @@ public:
                 if(hand[i].isSelected() && hand[i+1].isSelected() && !hand[i+2].isSelected()) {
                     pre.kindcode = 2;
                 }
-                
-                
             }
+            }
+            
             
         }
 
         bool isCardIsClicked = false;
         bool valid = false;
         
+        cout << "pre.kindCode " << pre.kindcode << endl;
         switch (pre.kindcode)
         {
         case 1:
@@ -127,6 +130,8 @@ public:
             {
                 if (hand[i].isSelected())
                 {
+                    cout << "hand is selected" << endl;
+
                     isCardIsClicked = true;
                     if (hand[i].value / 4 > pre.maxCard / 4)
                         valid = true;
@@ -157,6 +162,7 @@ public:
                     isCardIsClicked = true;
                     
                     if((three[i].maxCard->value / 4) > (pre.maxCard / 4)) {
+                        cout << "valid = true" << endl;
                         valid = true;
                     }
                     break;
@@ -191,6 +197,7 @@ public:
 
     Play playerPlayCard(Play play, SDL_Event event, int &passNum)
     {
+        cout << "play.maxCard = " << play.maxCard << endl;
         switch (play.kindcode)
         {
         case 1:

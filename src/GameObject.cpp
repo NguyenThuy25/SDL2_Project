@@ -54,7 +54,7 @@ void GameObject::RenderButton(int xButton, int yButton, int widthButton, int hei
     SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
     SDL_Delay(300);
 }
-bool GameObject::isClicked(SDL_Event event, int cardOrButton)
+bool GameObject::isClicked(SDL_Event& event, int cardOrButton)
 {
     // int cardOrButton: 1->card ; 2->button
     if (event.type == SDL_MOUSEMOTION) {

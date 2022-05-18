@@ -19,11 +19,11 @@ public:
 	// void setPath(std::string* _path);
 	void up(){
 		if(!isUp) {
-			destRect.y -= 10;
+			destRect.y -= 15;
 			isUp = true;
 		}
 		else {
-			destRect.y += 10;
+			destRect.y += 15;
 			isUp = false;
 		}
 	}
@@ -34,9 +34,9 @@ public:
 	
 	void moveUp() {
 		while(destRect.y > 300) {
-			destRect.y -= 1;
+			destRect.y -= 5;
 		}
-		SDL_Delay(10);
+		// SDL_Delay(10);
 	}
 	
 	void moveDown() {

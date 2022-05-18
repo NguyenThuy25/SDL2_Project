@@ -5,7 +5,8 @@
 #include <SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
 #include <iostream>
-#include"DeckOfCards.h"
+// #include"DeckOfCards.h"
+#include "Character.h"
 
 class Game {
 public:
@@ -16,7 +17,7 @@ public:
     void setUp();
     void handleEvents(SDL_Event event);
     void update();
-    void render();
+    void render(vector<Character> &character);
     void clean();
     bool running() {return isRunning; };
     void stop() {

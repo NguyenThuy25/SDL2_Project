@@ -1,5 +1,5 @@
 #include "Game.h"
-
+// #include "Character.h"
 Game::Game() {
     isRunning = true;
 }
@@ -58,12 +58,15 @@ void Game::update()
 {
     
 }
-void Game::render()
+void Game::render(vector<Character> &character)
 {
-    SDL_RenderClear(renderer);
-    
+    for(int i=0; i<4; i++) {
+            character[i].printCard();
+    }
     SDL_RenderPresent(renderer);
+    SDL_RenderClear(renderer);
 }
+
 
 void Game::clean()
 {

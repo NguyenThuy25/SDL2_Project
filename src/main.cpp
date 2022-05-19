@@ -27,26 +27,42 @@ int main(int argc, char *argv[])
     for(int i=0; i<4; i++) {
         character[i].sort();
         character[i].putStraightThree();
-        character[i].putPair();
         character[i].putThree();
+        character[i].putPair();
+        
     }
     
     int whoTurn = game->whoPlayFirst();
     cout << whoTurn << " play first" << endl;
     play.maxCard = -5;
+    GameObject playButton("res/go.png", 150, 150);
+        GameObject passButton("res/pass.png", 200, 200);
+    
+        GameObject arrow("res/arrow.png", 550, 400);
     while (game->running())
     {
         // frameStart = SDL_GetTicks();
-        
+        // check if any player is win (run out of card)
+        for(int i=0; i<4; i++) {
+            if(character[i].runOutOfCard() != 0) {
+                cout << "player " << i << " win!" << endl;
+                game->stop();
+            }
+        }
         // game->handleEvents(event) ;
-        GameObject playButton("res/go.png", 150, 150);
-        GameObject passButton("res/pass.png", 200, 200);
-        playButton.RenderButton(500, 500, 200, 70);
-        passButton.RenderButton(800, 500, 200, 70);
-
+        playButton.RenderButton(900, 500, 200, 70, 0);
+        passButton.RenderButton(900, 600, 200, 70, 0);
+        
         bool isPlayed = false;
         if (whoTurn != 3)
         {
+            if(whoTurn == 0) {
+                arrow.RenderArrow(90);
+            } else if(whoTurn == 1) {
+                arrow.RenderArrow(180);
+            } else {
+                arrow.RenderArrow(270);
+            }
             if (play.maxCard < 0) {
                     if(character[whoTurn].straightThree.size() != 0) {
                         play.kindcode = 5;
@@ -82,9 +98,15 @@ int main(int argc, char *argv[])
             }
             if (whoTurn == 3)
             {
+                
                 character[3].checkEvent(event);
+                // while(whoTurn == 3) {
+                    arrow.RenderArrow(0);
+                // }
+                
+                // arrow.RenderButton(400, 400, 100, 100, 0);
                 int type = character[3].isPlayedCard(play, event, playButton.isClicked(event, 2), passButton.isClicked(event, 2));
-                // cout << "type of player " << type << endl;
+                cout << "type of player " << type << endl;
                 if (type == 1)
                 {
                     play = character[3].playerPlayCard(play, event, passNum);
@@ -106,13 +128,7 @@ int main(int argc, char *argv[])
         
             }
         }
-        // check if any player is win (run out of card)
-        for(int i=0; i<4; i++) {
-            if(character[i].runOutOfCard() != 0) {
-                cout << "player " << i << " win!" << endl;
-                game->stop();
-            }
-        }
+        
         if (isPlayed)
         {
             whoTurn = (whoTurn + 1) % 4;

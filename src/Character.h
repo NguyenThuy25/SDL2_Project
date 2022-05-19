@@ -48,7 +48,7 @@ public:
         }
         for (int i = 0; i < hand.size() - 1; i++)
         {
-            if ((hand[i].value / 4 == hand[i + 1].value / 4) && hand[i].choosen == false && hand[i + 1].choosen == false)
+            if ((hand[i].value / 4 == hand[i + 1].value / 4) && (hand[i].choosen == false || hand[i + 1].choosen == false))
             {
                 hand[i].choosen = true;
                 hand[i + 1].choosen = true;
@@ -69,7 +69,7 @@ public:
 
         for (int i = 0; i < hand.size() - 3; i++)
         {
-            if ((hand[i].value / 4 == hand[i + 1].value / 4) && (hand[i + 1].value / 4 == hand[i + 2].value / 4) && hand[i].choosen == false && hand[i + 1].choosen == false)
+            if ((hand[i].value / 4 == hand[i + 1].value / 4) && (hand[i + 1].value / 4 == hand[i + 2].value / 4) && (hand[i].choosen == false || hand[i + 1].choosen == false || (hand[i+2].choosen == false)))
             {
                 hand[i].choosen = true;
                 hand[i + 1].choosen = true;
@@ -107,7 +107,7 @@ public:
             int v3 = nextFace(v2);
             if (v1 >= 0 && v2 > 0 && v3 > 0)
             {
-                if ((hand[v1].value / 4 == hand[v2].value / 4 - 1) && (hand[v2].value / 4 == hand[v3].value / 4 - 1) && hand[v1].choosen == false && hand[v2].choosen == false && hand[v3].choosen == false)
+                if ((hand[v1].value / 4 == hand[v2].value / 4 - 1) && (hand[v2].value / 4 == hand[v3].value / 4 - 1) && (hand[v1].choosen == false || hand[v2].choosen == false || hand[v3].choosen == false) && (hand[v3].value / 4!= 12))
                 {
                     hand[v1].choosen = true;
                     hand[v2].choosen = true;
@@ -118,28 +118,8 @@ public:
                 }
             }
         }
-        // for(int i = 0; i < hand.size()-3; i++) {
-        // if((hand[i].value / 4 == (hand[i+1].value / 4 - 1)) && (hand[i+1].value / 4 == (hand[i+2].value / 4 - 1))){
-        //     // hand[i].choosen = true;
-        //     // hand[i+1].choosen = true;
-        //     // hand[i+2].choosen = true;
-        //     StraightThree tmp(hand[i], hand[i+1], hand[i+2]);
-        //     straightThree.push_back(tmp);
-        //     cout << "straightThree: " << hand[i].value << "+" << hand[i+1].value << "+" << hand[i+2].value << endl;
-        // }
+
     }
-    // void eraseByValue(int value)
-    // {
-    //     for (int i = 0; i < hand.size(); i++)
-    //     {
-    //         if (hand[i].value == value)
-    //         {
-    //             hand.erase(hand.begin() + i);
-    //             // hand.erase(hand.begin() + i);
-    //             break;
-    //         }
-    //     }
-    // }
 
     void popOut()
     {
@@ -168,9 +148,9 @@ public:
     {
         if (pre.maxCard < 0) {
             pre.kindcode = 1;
-            for (int i = 0; i < (hand.size() - 2); i++) {
+            
             if (hand.size() > 2) {
-                
+                for (int i = 0; i < (hand.size() - 2); i++) {
                     if (hand.size() < 3)
                         break;
                     int v1 = i;
@@ -192,20 +172,24 @@ public:
                             break;
                         }
                     }
-                    
-                    
-                }
-                if(hand[i].isSelected() && hand[i+1].isSelected() /*&& !hand[i+2].isSelected()*/) {
+                    if(hand[i].isSelected() && hand[i+1].isSelected() && !hand[i+2].isSelected()) {
                     pre.kindcode = 2;
                     break;
                 }
+                }
+                
+            } else if (hand.size() == 2) {
+                for(int i=0; i<hand.size(); i++) {
+                if(hand[i].isSelected() && hand[i+1].isSelected()) {
+                    pre.kindcode = 2;
+                }
+                }
             }
         }
-
+        // cout << "pre.kindcode =====" << pre.kindcode << endl;
         bool isCardIsClicked = false;
         bool valid = false;
 
-        // cout << "pre.kindCode " << pre.kindcode << endl;
         switch (pre.kindcode)
         {
         case 1:
@@ -213,8 +197,6 @@ public:
             {
                 if (hand[i].isSelected())
                 {
-                    cout << "hand is selected" << endl;
-
                     isCardIsClicked = true;
                     if (hand[i].value / 4 > pre.maxCard / 4)
                         valid = true;
@@ -258,11 +240,11 @@ public:
         case 5:
             for (int i = 0; i < straightThree.size(); i++)
             {
-                cout << "isCardIsClicked = true" << endl;
+                
                 if (straightThree[i].s[0]->isSelected() && straightThree[i].s[1]->isSelected() && straightThree[i].s[2]->isSelected())
                 {
                     isCardIsClicked = true;
-
+                    cout << "isCardIsClicked = true" << endl;
                     if ((straightThree[i].maxCard->value / 4) > (pre.maxCard / 4))
                     {
                         valid = true;
@@ -296,7 +278,7 @@ public:
 
     Play playerPlayCard(Play play, SDL_Event event, int &passNum)
     {
-        cout << "play.maxCard = " << play.maxCard << endl;
+        
         switch (play.kindcode)
         {
         case 1:
@@ -306,7 +288,7 @@ public:
                 {
                     passNum = 0;
                     Card playedCard3(hand[i].path);
-                    playedCard3.RenderButton(400, 500, 150, 200);
+                    playedCard3.RenderButton(400, 500, 150, 200, 0);
                     play.maxCard = hand[i].value;
                     cout << "player play single card " << hand[i].value << endl;
                     hand[i].value = -2; // every card that have value -2 will be pop out
@@ -324,8 +306,8 @@ public:
                     passNum = 0;
                     Card playedPair1(pair[i].p1->path);
                     Card playedPair2(pair[i].p2->path);
-                    playedPair1.RenderButton(400, 500, 150, 200);
-                    playedPair2.RenderButton(450, 500, 150, 200);
+                    playedPair1.RenderButton(400, 500, 150, 200, 0);
+                    playedPair2.RenderButton(450, 500, 150, 200, 0);
                     play.maxCard = pair[i].p2->value;
 
                     // don't need this but still add to try
@@ -349,9 +331,9 @@ public:
                     Card playedThree1(three[i].t[0]->path);
                     Card playedThree2(three[i].t[1]->path);
                     Card playedThree3(three[i].t[2]->path);
-                    playedThree1.RenderButton(400, 500, 150, 200);
-                    playedThree2.RenderButton(450, 500, 150, 200);
-                    playedThree3.RenderButton(500, 500, 150, 200);
+                    playedThree1.RenderButton(400, 500, 150, 200, 0);
+                    playedThree2.RenderButton(450, 500, 150, 200, 0);
+                    playedThree3.RenderButton(500, 500, 150, 200, 0);
                     play.maxCard = three[i].maxCard->value;
 
                     // don't need this but still add to try
@@ -372,13 +354,12 @@ public:
                     Card playedStraightThree1(straightThree[i].s[0]->path);
                     Card playedStraightThree2(straightThree[i].s[1]->path);
                     Card playedStraightThree3(straightThree[i].s[2]->path);
-                    playedStraightThree1.RenderButton(400, 500, 150, 200);
-                    playedStraightThree2.RenderButton(450, 500, 150, 200);
-                    playedStraightThree3.RenderButton(500, 500, 150, 200);
+                    playedStraightThree1.RenderButton(400, 500, 150, 200, 0);
+                    playedStraightThree2.RenderButton(450, 500, 150, 200, 0);
+                    playedStraightThree3.RenderButton(500, 500, 150, 200, 0);
                     play.maxCard = straightThree[i].maxCard->value;
-
                     // don't need this but still add to try
-                    play.kindcode = 3;
+                    play.kindcode = 5;
                     cout << "player plays straight three " << straightThree[i].s[0]->value << " + " << straightThree[i].s[1]->value << " + " << straightThree[i].s[2]->value << endl;
                     straightThree[i].s[0]->value = -2;
                     straightThree[i].s[1]->value = -2;
@@ -387,14 +368,15 @@ public:
                 }
             }
         }
+        cout << "play.maxCard = " << play.maxCard << endl;
         return play;
     }
 
     // add function
     void classify()
     {
-        putThree();
         putStraightThree();
+        putThree();
         putPair();
     }
 
@@ -413,13 +395,13 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlayedCard.RenderButton(200, 300, 150, 200);
+                        botPlayedCard.RenderButton(200, 300, 150, 200, 0);
                         break;
                     case 1:
-                        botPlayedCard.RenderButton(500, 200, 150, 200);
+                        botPlayedCard.RenderButton(500, 200, 150, 200, 0);
                         break;
                     case 2:
-                        botPlayedCard.RenderButton(800, 300, 150, 200);
+                        botPlayedCard.RenderButton(800, 300, 150, 200, 0);
                     default:
                         break;
                     }
@@ -447,21 +429,21 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlayPair1.RenderButton(200, 300, 150, 200);
-                        botPlayPair2.RenderButton(250, 300, 150, 200);
+                        botPlayPair1.RenderButton(200, 300, 150, 200, 0);
+                        botPlayPair2.RenderButton(250, 300, 150, 200, 0);
                         break;
                     case 1:
-                        botPlayPair1.RenderButton(500, 200, 150, 200);
-                        botPlayPair2.RenderButton(550, 200, 150, 200);
+                        botPlayPair1.RenderButton(500, 200, 150, 200, 0);
+                        botPlayPair2.RenderButton(550, 200, 150, 200, 0);
                         break;
                     case 2:
-                        botPlayPair1.RenderButton(800, 300, 150, 200);
-                        botPlayPair2.RenderButton(850, 300, 150, 200);
+                        botPlayPair1.RenderButton(800, 300, 150, 200, 0);
+                        botPlayPair2.RenderButton(850, 300, 150, 200, 0);
                     default:
                         break;
                     }
 
-                    SDL_Delay(200);
+                    // SDL_Delay(100);
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = pair[i].p2->value;
@@ -495,20 +477,20 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlayThree1.RenderButton(200, 300, 150, 200);
-                        botPlayThree2.RenderButton(250, 300, 150, 200);
-                        botPlayThree3.RenderButton(300, 300, 150, 200);
+                        botPlayThree1.RenderButton(200, 300, 150, 200, 0);
+                        botPlayThree2.RenderButton(250, 300, 150, 200, 0);
+                        botPlayThree3.RenderButton(300, 300, 150, 200, 0);
 
                         break;
                     case 1:
-                        botPlayThree1.RenderButton(500, 200, 150, 200);
-                        botPlayThree2.RenderButton(550, 200, 150, 200);
-                        botPlayThree3.RenderButton(600, 200, 150, 200);
+                        botPlayThree1.RenderButton(500, 200, 150, 200, 0);
+                        botPlayThree2.RenderButton(550, 200, 150, 200, 0);
+                        botPlayThree3.RenderButton(600, 200, 150, 200, 0);
                         break;
                     case 2:
-                        botPlayThree1.RenderButton(800, 300, 150, 200);
-                        botPlayThree2.RenderButton(850, 300, 150, 200);
-                        botPlayThree3.RenderButton(900, 300, 150, 200);
+                        botPlayThree1.RenderButton(800, 300, 150, 200, 0);
+                        botPlayThree2.RenderButton(850, 300, 150, 200, 0);
+                        botPlayThree3.RenderButton(900, 300, 150, 200, 0);
                         break;
 
                     default:
@@ -543,19 +525,19 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlaystraightThree1.RenderButton(200, 300, 150, 200);
-                        botPlaystraightThree2.RenderButton(250, 300, 150, 200);
-                        botPlaystraightThree3.RenderButton(300, 300, 150, 200);
+                        botPlaystraightThree1.RenderButton(200, 300, 150, 200, 0);
+                        botPlaystraightThree2.RenderButton(250, 300, 150, 200, 0);
+                        botPlaystraightThree3.RenderButton(300, 300, 150, 200, 0);
                         break;
                     case 1:
-                        botPlaystraightThree1.RenderButton(500, 200, 150, 200);
-                        botPlaystraightThree2.RenderButton(550, 200, 150, 200);
-                        botPlaystraightThree3.RenderButton(600, 200, 150, 200);
+                        botPlaystraightThree1.RenderButton(500, 200, 150, 200, 0);
+                        botPlaystraightThree2.RenderButton(550, 200, 150, 200, 0);
+                        botPlaystraightThree3.RenderButton(600, 200, 150, 200, 0);
                         break;
                     case 2:
-                        botPlaystraightThree1.RenderButton(800, 300, 150, 200);
-                        botPlaystraightThree2.RenderButton(850, 300, 150, 200);
-                        botPlaystraightThree3.RenderButton(900, 300, 150, 200);
+                        botPlaystraightThree1.RenderButton(800, 300, 150, 200, 0);
+                        botPlaystraightThree2.RenderButton(850, 300, 150, 200, 0);
+                        botPlaystraightThree3.RenderButton(900, 300, 150, 200, 0);
                         break;
                     default:
                         break;

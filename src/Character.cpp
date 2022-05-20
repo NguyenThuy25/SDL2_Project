@@ -7,21 +7,39 @@ Character::Character() {
 }
 Character::Character(int _indexOfPlayer, DeckOfCards& _deck) {
     indexOfPlayer = _indexOfPlayer;
-    for(int i=0; i<10; i++) {
+    if(indexOfPlayer != 3) {
+        for(int i=0; i<10; i++) {
+        Card tmp1 = _deck.getCard();
+        Card tmp2(cardGraphics[52]);
+        tmp2.setPos(xpos[indexOfPlayer][i], ypos[indexOfPlayer][i]);
+        // tmp.path = cardGraphics[tmp.value];
+        tmp2.value = tmp1.value;
+        hand.push_back(tmp2);
+    }
+    } else {
+        for(int i=0; i<10; i++) {
         Card tmp = _deck.getCard();
         tmp.setPos(xpos[indexOfPlayer][i], ypos[indexOfPlayer][i]);
         tmp.path = cardGraphics[tmp.value];
         hand.push_back(tmp);
-        
     }
+    
+}
 }
 
 void Character::printCard() {
+    // if(indexOfPlayer != 3) {
+
+    // }
     for(Card c : hand) {
         c.Render();
     }
     
 }
+
+// void Character::printCardback() {
+
+// }
 void Character::checkEvent(SDL_Event e) {
         for(int i=0; i<hand.size(); i++) {
             if(hand[i].isClicked(e, 1)) hand[i].up();

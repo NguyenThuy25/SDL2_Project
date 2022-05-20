@@ -21,6 +21,9 @@
         "system_error": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "iosfwd": "cpp",
+        "__split_buffer": "cpp",
+        "string": "cpp"
     }
 }

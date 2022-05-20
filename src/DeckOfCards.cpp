@@ -12,6 +12,7 @@ DeckOfCards::DeckOfCards() {
         t.choosen=false;
         deck.push_back(t);
     }
+    
 }
 
 

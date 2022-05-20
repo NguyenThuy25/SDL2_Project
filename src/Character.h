@@ -36,6 +36,7 @@ public:
     Character();
     Character(int _indexOfPlayer, DeckOfCards &_deck);
     void printCard();
+    // void printCardBack();
     void checkEvent(SDL_Event e);
     void sort();
 
@@ -287,7 +288,8 @@ public:
                 if (hand[i].isSelected())
                 {
                     passNum = 0;
-                    Card playedCard3(hand[i].path);
+                    // Card playedCard3(hand[i].path);
+                    Card playedCard3(cardGraphics[hand[i].value]);
                     playedCard3.RenderButton(400, 500, 150, 200, 0);
                     play.maxCard = hand[i].value;
                     cout << "player play single card " << hand[i].value << endl;
@@ -304,8 +306,11 @@ public:
                 if (pair[i].p1->isSelected() && pair[i].p2->isSelected())
                 {
                     passNum = 0;
-                    Card playedPair1(pair[i].p1->path);
-                    Card playedPair2(pair[i].p2->path);
+
+                    // Card playedPair1(pair[i].p1->path);
+                    // Card playedPair2(pair[i].p2->path);
+                    Card playedPair1(cardGraphics[pair[i].p1->value]);
+                    Card playedPair2(cardGraphics[pair[i].p2->value]);
                     playedPair1.RenderButton(400, 500, 150, 200, 0);
                     playedPair2.RenderButton(450, 500, 150, 200, 0);
                     play.maxCard = pair[i].p2->value;
@@ -328,9 +333,12 @@ public:
                 if (three[i].t[0]->isSelected() && three[i].t[1]->isSelected() && three[i].t[2]->isSelected())
                 {
                     passNum = 0;
-                    Card playedThree1(three[i].t[0]->path);
-                    Card playedThree2(three[i].t[1]->path);
-                    Card playedThree3(three[i].t[2]->path);
+                    // Card playedThree1(three[i].t[0]->path);
+                    // Card playedThree2(three[i].t[1]->path);
+                    // Card playedThree3(three[i].t[2]->path);
+                    Card playedThree1(cardGraphics[three[i].t[0]->value]);
+                    Card playedThree2(cardGraphics[three[i].t[1]->value]);
+                    Card playedThree3(cardGraphics[three[i].t[2]->value]);
                     playedThree1.RenderButton(400, 500, 150, 200, 0);
                     playedThree2.RenderButton(450, 500, 150, 200, 0);
                     playedThree3.RenderButton(500, 500, 150, 200, 0);
@@ -351,9 +359,12 @@ public:
                 if (straightThree[i].s[0]->isSelected() && straightThree[i].s[1]->isSelected() && straightThree[i].s[2]->isSelected())
                 {
                     passNum = 0;
-                    Card playedStraightThree1(straightThree[i].s[0]->path);
-                    Card playedStraightThree2(straightThree[i].s[1]->path);
-                    Card playedStraightThree3(straightThree[i].s[2]->path);
+                    // Card playedStraightThree1(straightThree[i].s[0]->path);
+                    // Card playedStraightThree2(straightThree[i].s[1]->path);
+                    // Card playedStraightThree3(straightThree[i].s[2]->path);
+                    Card playedStraightThree1(cardGraphics[straightThree[i].s[0]->value]);
+                    Card playedStraightThree2(cardGraphics[straightThree[i].s[1]->value]);
+                    Card playedStraightThree3(cardGraphics[straightThree[i].s[2]->value]);
                     playedStraightThree1.RenderButton(400, 500, 150, 200, 0);
                     playedStraightThree2.RenderButton(450, 500, 150, 200, 0);
                     playedStraightThree3.RenderButton(500, 500, 150, 200, 0);
@@ -390,7 +401,8 @@ public:
             {
                 if (((hand[i].value / 4) > (pre.maxCard / 4)) && hand[i].choosen == 0)
                 {
-                    Card botPlayedCard(hand[i].path);
+                    // Card botPlayedCard(hand[i].path);
+                    Card botPlayedCard(cardGraphics[hand[i].value]);
                     // switch (indexOfPlayer)
                     switch (whoTurn)
                     {
@@ -424,8 +436,10 @@ public:
             {
                 if ((pair[i].p2->value / 4) > (pre.maxCard / 4) /* && pair[i].choosen = false */)
                 {
-                    Card botPlayPair1(pair[i].p1->path);
-                    Card botPlayPair2(pair[i].p2->path);
+                    // Card botPlayPair1(pair[i].p1->path);
+                    // Card botPlayPair2(pair[i].p2->path);
+                    Card botPlayPair1(cardGraphics[pair[i].p1->value]);
+                    Card botPlayPair2(cardGraphics[pair[i].p2->value]);
                     switch (whoTurn)
                     {
                     case 0:
@@ -471,9 +485,12 @@ public:
             {
                 if ((three[i].maxCard->value / 4) > (pre.maxCard / 4) /* && pair[i].choosen = false */)
                 {
-                    Card botPlayThree1(three[i].t[0]->path);
-                    Card botPlayThree2(three[i].t[1]->path);
-                    Card botPlayThree3(three[i].t[2]->path);
+                    // Card botPlayThree1(three[i].t[0]->path);
+                    // Card botPlayThree2(three[i].t[1]->path);
+                    // Card botPlayThree3(three[i].t[2]->path);
+                    Card botPlayThree1(cardGraphics[three[i].t[0]->value]);
+                    Card botPlayThree2(cardGraphics[three[i].t[1]->value]);
+                    Card botPlayThree3(cardGraphics[three[i].t[2]->value]);
                     switch (whoTurn)
                     {
                     case 0:
@@ -519,9 +536,13 @@ public:
             {
                 if ((straightThree[i].maxCard->value / 4) > (pre.maxCard / 4) /* && pair[i].choosen = false */)
                 {
-                    Card botPlaystraightThree1(straightThree[i].s[0]->path);
-                    Card botPlaystraightThree2(straightThree[i].s[1]->path);
-                    Card botPlaystraightThree3(straightThree[i].s[2]->path);
+                    // Card botPlaystraightThree1(straightThree[i].s[0]->path);
+                    // Card botPlaystraightThree2(straightThree[i].s[1]->path);
+                    // Card botPlaystraightThree3(straightThree[i].s[2]->path);
+                    Card botPlaystraightThree1(cardGraphics[straightThree[i].s[0]->value]);
+                    Card botPlaystraightThree2(cardGraphics[straightThree[i].s[1]->value]);
+                    Card botPlaystraightThree3(cardGraphics[straightThree[i].s[2]->value]);
+                    
                     switch (whoTurn)
                     {
                     case 0:

@@ -28,6 +28,9 @@ void Game::init(const char *title, int x, int y, int w, int h, bool fullscreen)
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             std::cout << "Renderer created!" << std::endl;
         }
+        if(TTF_Init() == -1) {
+            std::cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl ;
+        }
         isRunning = true;
     }
     else
@@ -60,9 +63,24 @@ void Game::update()
 }
 void Game::render(vector<Character> &character)
 {
-    for(int i=0; i<4; i++) {
-            character[i].printCard();
+    
+
+    for(int i=0; i<3; i++) {
+        for(int j=0; j<character[i].hand.size(); j++) {
+            character[i].hand[j].path = cardGraphics[52];
+        }
     }
+    character[0].printCard();
+    character[1].printCard();
+    character[2].printCard();
+    character[3].printCard();  
+        
+    
+
+    // for(int i=0; i<3; i++) {
+    //     character[i].printCard();
+    // }
+    
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 }

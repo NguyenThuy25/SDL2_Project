@@ -15,6 +15,9 @@ public:
 	Card(){}
 	Card(string path) : GameObject(path, 0, 0) {
 	}
+	void setPath(std::string _path) {
+		path = _path;
+	}
 	Card(string texturesheet, int x, int y, int value);
 	// void setPath(std::string* _path);
 	void up(){

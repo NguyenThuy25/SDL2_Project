@@ -17,7 +17,7 @@ public:
     void Render();
     // void RenderFull();
     void RenderArrow(int angle);
-    void RenderButton(int xButton, int yButton, int widthButton, int heightButton, int angle);
+    void RenderButton(int xButton, int yButton, int widthButton, int heightButton, int angle, bool isDelay);
     void setPos(int _x, int _y){
         x = _x;
         y = _y;

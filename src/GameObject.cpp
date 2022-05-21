@@ -19,7 +19,6 @@ SDL_Texture* GameObject::LoadTexture(const char* texture) {
     SDL_Surface* tempSurface = IMG_Load(texture);
     SDL_Texture* tex = SDL_CreateTextureFromSurface(Game::renderer, tempSurface);
     SDL_FreeSurface(tempSurface);
-
     return tex;
 }
 GameObject::GameObject(std::string texturesheet, int _x, int _y) : GameObject(){
@@ -36,19 +35,21 @@ void GameObject::Update() {
 
 void GameObject::Render() {
     SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
-    // SDL_Delay(100);
+    // SDL_Delay(10);
     // SDL_RenderCopyEx(Game::renderer, objTexture, &srcRect, &destRect, 0, NULL, SDL_FLIP_NONE);
 }
 
 void GameObject::RenderArrow(int angle) {
+    
     SDL_RenderCopyEx(Game::renderer, objTexture, &srcRect, &destRect, angle, NULL, SDL_FLIP_NONE);
-    destRect.w =150;
-    destRect.h = 150;
+    destRect.w =100;
+    destRect.h =100;
+    // SDL_Delay(100);
 }
 // void GameObject::RenderFull() {
 //     SDL_RenderCopy(Game::renderer, objTexture, NULL, NULL);
 // }
-void GameObject::RenderButton(int xButton, int yButton, int widthButton, int heightButton, int angle) {
+void GameObject::RenderButton(int xButton, int yButton, int widthButton, int heightButton, int angle, bool isDelay) {
     x = 0;
     y = 0;
     srcRect.x = 0;
@@ -62,7 +63,10 @@ void GameObject::RenderButton(int xButton, int yButton, int widthButton, int hei
     destRect.h = srcRect.h;
     // SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
     SDL_RenderCopyEx(Game::renderer, objTexture, &srcRect, &destRect, angle, NULL, SDL_FLIP_NONE);
-    SDL_Delay(200);
+    // if(isDelay) {
+        SDL_Delay(150);
+    // }
+
 }
 bool GameObject::isClicked(SDL_Event& event, int cardOrButton)
 {

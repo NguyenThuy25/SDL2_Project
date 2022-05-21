@@ -14,7 +14,7 @@ public:
 SDL_Window* gWindow = NULL;
 
 // The window renderer
-SDL_Renderer* gRenderer = NULL;
+SDL_Renderer* gRenderer = Game::renderer;
 
 //Globally used font
 TTF_Font *gFont = NULL;
@@ -25,7 +25,7 @@ TTF_Font *gFont = NULL;
     } 
     //Deallocates memory
     ~Texture();
-
+    void waitUntilKeyPressed();
     //Loads image at specified path
     bool loadFromFile( std::string path );
 

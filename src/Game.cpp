@@ -81,8 +81,7 @@ void Game::render(vector<Character> &character)
     //     character[i].printCard();
     // }
     
-    SDL_RenderPresent(renderer);
-    SDL_RenderClear(renderer);
+    
 }
 
 

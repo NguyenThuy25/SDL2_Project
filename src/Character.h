@@ -14,14 +14,14 @@ class Character : public GameObject
 {
 private:
     int xpos[4][10] = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {150, 200, 250, 300, 350, 400, 450, 500, 550, 600},
+        {-80, -80, -80, -80, -80, -80, -80, -80, -80, -80},
+        {200, 270, 340, 410, 480, 550, 620, 690, 760, 830},
         {1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200},
         {200, 270, 340, 410, 480, 550, 620, 690, 760, 830}};
 
     int ypos[4][10] = {
-        {50, 90, 130, 170, 210, 250, 290, 330, 370, 410},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {100, 140, 180, 220, 260, 300, 340, 380, 420, 460},
+        {-40, -40, -40, -40, -40, -40, -40, -40, -40, -40},
         {100, 140, 180, 220, 260, 300, 340, 380, 420, 460},
         {700, 700, 700, 700, 700, 700, 700, 700, 700, 700}};
 
@@ -290,7 +290,7 @@ public:
                     passNum = 0;
                     // Card playedCard3(hand[i].path);
                     Card playedCard3(cardGraphics[hand[i].value]);
-                    playedCard3.RenderButton(400, 500, 150, 200, 0);
+                    playedCard3.RenderButton(550, 500, 150, 200, 0, true);
                     play.maxCard = hand[i].value;
                     cout << "player play single card " << hand[i].value << endl;
                     hand[i].value = -2; // every card that have value -2 will be pop out
@@ -311,8 +311,8 @@ public:
                     // Card playedPair2(pair[i].p2->path);
                     Card playedPair1(cardGraphics[pair[i].p1->value]);
                     Card playedPair2(cardGraphics[pair[i].p2->value]);
-                    playedPair1.RenderButton(400, 500, 150, 200, 0);
-                    playedPair2.RenderButton(450, 500, 150, 200, 0);
+                    playedPair1.RenderButton(550, 500, 150, 200, 0, true);
+                    playedPair2.RenderButton(600, 500, 150, 200, 0, true);
                     play.maxCard = pair[i].p2->value;
 
                     // don't need this but still add to try
@@ -339,9 +339,9 @@ public:
                     Card playedThree1(cardGraphics[three[i].t[0]->value]);
                     Card playedThree2(cardGraphics[three[i].t[1]->value]);
                     Card playedThree3(cardGraphics[three[i].t[2]->value]);
-                    playedThree1.RenderButton(400, 500, 150, 200, 0);
-                    playedThree2.RenderButton(450, 500, 150, 200, 0);
-                    playedThree3.RenderButton(500, 500, 150, 200, 0);
+                    playedThree1.RenderButton(550, 500, 150, 200, 0, true);
+                    playedThree2.RenderButton(600, 500, 150, 200, 0, true);
+                    playedThree3.RenderButton(650, 500, 150, 200, 0, true);
                     play.maxCard = three[i].maxCard->value;
 
                     // don't need this but still add to try
@@ -365,9 +365,9 @@ public:
                     Card playedStraightThree1(cardGraphics[straightThree[i].s[0]->value]);
                     Card playedStraightThree2(cardGraphics[straightThree[i].s[1]->value]);
                     Card playedStraightThree3(cardGraphics[straightThree[i].s[2]->value]);
-                    playedStraightThree1.RenderButton(400, 500, 150, 200, 0);
-                    playedStraightThree2.RenderButton(450, 500, 150, 200, 0);
-                    playedStraightThree3.RenderButton(500, 500, 150, 200, 0);
+                    playedStraightThree1.RenderButton(550, 500, 150, 200, 0, true);
+                    playedStraightThree2.RenderButton(600, 500, 150, 200, 0, true);
+                    playedStraightThree3.RenderButton(650, 500, 150, 200, 0, true);
                     play.maxCard = straightThree[i].maxCard->value;
                     // don't need this but still add to try
                     play.kindcode = 5;
@@ -407,18 +407,19 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlayedCard.RenderButton(200, 300, 150, 200, 0);
+                        botPlayedCard.RenderButton(230, 330, 150, 200, 0, true);
                         break;
                     case 1:
-                        botPlayedCard.RenderButton(500, 200, 150, 200, 0);
+                        botPlayedCard.RenderButton(500, 200, 150, 200, 0, true);
                         break;
                     case 2:
-                        botPlayedCard.RenderButton(800, 300, 150, 200, 0);
+                        botPlayedCard.RenderButton(850, 300, 150, 200, 0, true);
+                        // botPlayedCard.RenderButton(800, 300, 150, 200, 0, true);
                     default:
                         break;
                     }
 
-                    SDL_Delay(200);
+                    // SDL_Delay(200);
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = hand[i].value;
@@ -443,21 +444,21 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlayPair1.RenderButton(200, 300, 150, 200, 0);
-                        botPlayPair2.RenderButton(250, 300, 150, 200, 0);
+                        botPlayPair1.RenderButton(230, 330, 150, 200, 0, true);
+                        botPlayPair2.RenderButton(280, 330, 150, 200, 0, true);
                         break;
                     case 1:
-                        botPlayPair1.RenderButton(500, 200, 150, 200, 0);
-                        botPlayPair2.RenderButton(550, 200, 150, 200, 0);
+                        botPlayPair1.RenderButton(500, 200, 150, 200, 0, true);
+                        botPlayPair2.RenderButton(550, 200, 150, 200, 0, true);
                         break;
                     case 2:
-                        botPlayPair1.RenderButton(800, 300, 150, 200, 0);
-                        botPlayPair2.RenderButton(850, 300, 150, 200, 0);
+                        botPlayPair1.RenderButton(850, 300, 150, 200, 0, true);
+                        botPlayPair2.RenderButton(950, 300, 150, 200, 0, true);
                     default:
                         break;
                     }
 
-                    // SDL_Delay(100);
+                    // SDL_Delay(200);
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = pair[i].p2->value;
@@ -494,27 +495,27 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlayThree1.RenderButton(200, 300, 150, 200, 0);
-                        botPlayThree2.RenderButton(250, 300, 150, 200, 0);
-                        botPlayThree3.RenderButton(300, 300, 150, 200, 0);
+                        botPlayThree1.RenderButton(230, 330, 150, 200, 0, true);
+                        botPlayThree2.RenderButton(280, 330, 150, 200, 0, true);
+                        botPlayThree3.RenderButton(330, 330, 150, 200, 0, true);
 
                         break;
                     case 1:
-                        botPlayThree1.RenderButton(500, 200, 150, 200, 0);
-                        botPlayThree2.RenderButton(550, 200, 150, 200, 0);
-                        botPlayThree3.RenderButton(600, 200, 150, 200, 0);
+                        botPlayThree1.RenderButton(500, 200, 150, 200, 0, true);
+                        botPlayThree2.RenderButton(550, 200, 150, 200, 0, true);
+                        botPlayThree3.RenderButton(600, 200, 150, 200, 0, true);
                         break;
                     case 2:
-                        botPlayThree1.RenderButton(800, 300, 150, 200, 0);
-                        botPlayThree2.RenderButton(850, 300, 150, 200, 0);
-                        botPlayThree3.RenderButton(900, 300, 150, 200, 0);
+                        botPlayThree1.RenderButton(850, 300, 150, 200, 0, true);
+                        botPlayThree2.RenderButton(900, 300, 150, 200, 0, true);
+                        botPlayThree3.RenderButton(950, 300, 150, 200, 0, true);
                         break;
 
                     default:
                         break;
                     }
 
-                    SDL_Delay(200);
+                    // SDL_Delay(200);
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = three[i].maxCard->value;
@@ -546,25 +547,25 @@ public:
                     switch (whoTurn)
                     {
                     case 0:
-                        botPlaystraightThree1.RenderButton(200, 300, 150, 200, 0);
-                        botPlaystraightThree2.RenderButton(250, 300, 150, 200, 0);
-                        botPlaystraightThree3.RenderButton(300, 300, 150, 200, 0);
+                        botPlaystraightThree1.RenderButton(230, 330, 150, 200, 0, true);
+                        botPlaystraightThree2.RenderButton(280, 330, 150, 200, 0, true);
+                        botPlaystraightThree3.RenderButton(330, 330, 150, 200, 0, true);
                         break;
                     case 1:
-                        botPlaystraightThree1.RenderButton(500, 200, 150, 200, 0);
-                        botPlaystraightThree2.RenderButton(550, 200, 150, 200, 0);
-                        botPlaystraightThree3.RenderButton(600, 200, 150, 200, 0);
+                        botPlaystraightThree1.RenderButton(500, 200, 150, 200, 0, true);
+                        botPlaystraightThree2.RenderButton(550, 200, 150, 200, 0, true);
+                        botPlaystraightThree3.RenderButton(600, 200, 150, 200, 0, true);
                         break;
                     case 2:
-                        botPlaystraightThree1.RenderButton(800, 300, 150, 200, 0);
-                        botPlaystraightThree2.RenderButton(850, 300, 150, 200, 0);
-                        botPlaystraightThree3.RenderButton(900, 300, 150, 200, 0);
+                        botPlaystraightThree1.RenderButton(850, 300, 150, 200, 0, true);
+                        botPlaystraightThree2.RenderButton(900, 300, 150, 200, 0, true);
+                        botPlaystraightThree3.RenderButton(950, 300, 150, 200, 0, true);
                         break;
                     default:
                         break;
                     }
 
-                    SDL_Delay(200);
+                    // SDL_Delay(200);
                     justPlayed = true;
                     passNum = 0;
                     pre.maxCard = straightThree[i].maxCard->value;
@@ -577,8 +578,10 @@ public:
                     straightThree[i].s[2]->value = -2;
                     straightThree.erase(straightThree.begin() + i);
                 }
-                if (justPlayed)
+                if (justPlayed) {
                     break;
+                }
+                    
             }
             break;
         }

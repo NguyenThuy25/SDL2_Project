@@ -8,14 +8,15 @@ Game *game = nullptr;
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event event;
 int passNum = 0;
+int whoWin = -1;
 Play play;
-SDL_Color textColor = {255, 255, 255};
-// Texture menuBg;
+
+
 int main(int argc, char *argv[])
 {
 
     game = new Game();
-    game->init("BIG TWO GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 840, false);
+    game->init("CARD GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 840, false);
 
     DeckOfCards deckOfCard;
     deckOfCard.shuffle();
@@ -25,7 +26,6 @@ int main(int argc, char *argv[])
     character.push_back(Character(2, deckOfCard));
     character.push_back(Character(3, deckOfCard));
 
-    
     for (int i = 0; i < 4; i++)
     {
         character[i].sort();
@@ -33,42 +33,35 @@ int main(int argc, char *argv[])
         character[i].putThree();
         character[i].putPair();
     }
-    
 
     int whoTurn = game->whoPlayFirst();
     cout << whoTurn << " play first" << endl;
     play.maxCard = -5;
     GameObject playButton("res/go.png", 150, 150);
     GameObject passButton("res/pass.png", 200, 200);
-    GameObject arrow("res/arrow.png", 550, 400);
+    GameObject arrow("res/arrow.png", 600, 400);
     GameObject menuBackground("res/bghuhu.png", 0, 0);
     GameObject startButton1("res/startButton1.png", 200, 200);
     GameObject startButton2("res/startButton2.png", 200, 200);
+    GameObject inGameBg("res/inGamebg.png", 0, 0);
+    GameObject table("res/table.png", 400, 400);
+    // Texture wait;
+    // wait.waitUntilKeyPressed();
     while (game->running())
     {
         bool out = false;
         SDL_SetRenderDrawColor(Game::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(Game::renderer);
-        menuBackground.RenderButton(0, 0, 1280, 840, 0);
-        startButton1.RenderButton(900, 600, 128, 136, 0);
+        menuBackground.RenderButton(0, 0, 1280, 840, 0, false);
+        startButton1.RenderButton(900, 600, 128, 136, 0, false);
         SDL_RenderPresent(Game::renderer);
         while (SDL_PollEvent(&event) != 0)
         {
-            // menuBackground.RenderButton(0, 0, 1280, 840, 0);
             if (event.type == SDL_QUIT)
             {
                 game->stop();
                 break;
             }
-            // if (event.type == SDL_MOUSEMOTION)
-            // {
-            //     int x_m = event.motion.x;
-            //     int y_m = event.motion.y;
-            //     if ((x_m > 900) && (x_m < 900 + 128) && (y_m > 600) && (y_m < 600 + 136))
-            //     {
-            //         startButton2.RenderButton(500, 600, 128, 136, 0);
-            //     }
-            // }
             if (startButton1.isClicked(event, 2))
             {
                 out = true;
@@ -86,17 +79,38 @@ int main(int argc, char *argv[])
             if (character[i].runOutOfCard() != 0)
             {
                 cout << "player " << i << " win!" << endl;
-                game->stop();
+                // whoWin = i;
+                
+                // whoWin.setAlpha(255);
+                SDL_Color textColor = {255, 255, 255};
+                Texture whoWinText;
+                whoWinText.setBlendMode(SDL_BLENDMODE_BLEND);
+                string str;
+                if(i==3) {
+                    str = "You Win!";
+                } else if(i==0) str = "Player 1 win!";
+                else if(i==1) str = "Player 2 win!";
+                else if(i==2) str = "Player 3 win!";
+                whoWinText.loadFromRenderedText(str, textColor);
+                whoWinText.render(650, 550);
+            game->stop();
+            
             }
+            
         }
+        
+        
         // game->handleEvents(event) ;
         // menuBackground.RenderButton(0, 0, 1280, 840, 0);
 
         // startButton.RenderButton(200, 200, 50, 50, 0);
-
-        playButton.RenderButton(900, 500, 200, 70, 0);
-        passButton.RenderButton(900, 600, 200, 70, 0);
+        inGameBg.RenderButton(0, 0, 1280, 840, 0, true);
+        table.RenderButton(150, 180, 1000, 500, 0, true);
+        playButton.RenderButton(1000, 670, 200, 70, 0, false);
+        passButton.RenderButton(1000, 750, 200, 70, 0, false);
+        
         // playButton.LoadTexture("res/arrow.png");
+
         bool isPlayed = false;
         if (whoTurn != 3)
         {
@@ -133,6 +147,7 @@ int main(int argc, char *argv[])
             }
             cout << "play.kindcode =" << play.kindcode << endl;
             play = character[whoTurn].playCardAI(play, whoTurn, passNum);
+            // turnCount++;
             character[whoTurn].popOut();
             isPlayed = true;
         }
@@ -182,22 +197,14 @@ int main(int argc, char *argv[])
         if (isPlayed)
         {
             whoTurn = (whoTurn + 1) % 4;
+            // turnCount++;
         }
-        // cout << whoTurn << "'s turn " << endl;
-
         // game->update();
 
-        // for(int i=0; i<3; i++) {
-        //         for(int j=0; j<character[i].hand.size(); j++) {
-        //         character[i].hand[j].path = "res/cardBack_blue5.png";
-        //         character[i].hand[j].Render();
-
-        //     }
-        //     }
-        // for(int i=0; i<10; i++) {
-        //     character[3].hand[i].path = cardGraphics[52];
-        // }
         game->render(character);
+
+        SDL_RenderPresent(Game::renderer);
+        SDL_RenderClear(Game::renderer);
     }
     game->clean();
     return 0;

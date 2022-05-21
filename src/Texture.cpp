@@ -59,7 +59,10 @@ bool Texture::loadFromRenderedText( std::string textureText, SDL_Color textColor
 {
     //Get rid of preexisting texture
     free();
-
+    gFont = TTF_OpenFont( "timesbd.ttf", 100 );
+    if(gFont == NULL) {
+        cout << "gFont is NULL";
+    }
     //Render text surface
     SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
     if( textSurface == NULL )
@@ -118,22 +121,38 @@ void Texture::setAlpha( Uint8 alpha )
     //Modulate texture alpha
     SDL_SetTextureAlphaMod( mTexture, alpha );
 }
-
+void Texture::waitUntilKeyPressed()
+{
+    SDL_Event e;
+    while (true) {
+        if ( SDL_WaitEvent(&e) != 0 &&
+             (e.type == SDL_KEYDOWN || e.type == SDL_QUIT) ) {
+                 return;
+             }
+            
+        SDL_Delay(100);
+        
+    }
+}
 void Texture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
     //Set rendering space and render to screen
     SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-
+    
     //Set clip rendering dimensions
     if( clip != NULL )
     {
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
-
+    cout <<"program goes here";
     //Render to screen
+    GameObject gameOverbg("res/gameOverbg.png", 0, 0);
+    gameOverbg.RenderButton(0, 0, 1280, 840, 0, false);
     SDL_RenderCopyEx(Game::renderer, mTexture, clip, &renderQuad, angle, center, flip );
-    SDL_Delay(500);
+    // SDL_Delay(500);
+    SDL_RenderPresent(Game::renderer);
+    waitUntilKeyPressed();
 }
 
 int Texture::getWidth()

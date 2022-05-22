@@ -1,12 +1,7 @@
 #include "Pair.h"
 using namespace std;
 
-Pair::Pair(){
-	// Card a;
-	// Card b;
-	// p1=&a;
-	// p2=&b;
-}
+Pair::Pair(){}
 
 Pair::Pair(Card& a,Card& b)
 {
@@ -27,9 +22,6 @@ Pair::Pair(Card& a,Card& b)
         minCard = p1;
     }
 }
-//contructor of the class: Pair
-//Find the max card and assign it to maxCard
-//The constructor when no inputs received
 
 int Pair::comparePair(Pair A,Pair B){
 
@@ -40,14 +32,4 @@ int Pair::comparePair(Pair A,Pair B){
 	else
 	return -1;
 }
-//compare two "pair.maxCard.value"
-//If the former is bigger , return 1 , if latter is bigger , then return 0.
-//And if the values are the same , return (error message) -1.
 
-// void Pair::swap(Pair& a,Pair& b)
-// {
-//     Pair tmp;
-//     tmp=a;
-//     a=b;
-//     b=tmp;
-// }

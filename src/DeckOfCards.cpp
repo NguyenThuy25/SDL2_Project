@@ -1,6 +1,5 @@
 #include "DeckOfCards.h"
 #include <time.h>
-
 using namespace std;
 
 #define DECK_SIZE 53
@@ -12,9 +11,7 @@ DeckOfCards::DeckOfCards() {
         t.choosen=false;
         deck.push_back(t);
     }
-    
 }
-
 
 void DeckOfCards::shuffle() {
     srand(time(NULL));
@@ -26,15 +23,11 @@ void DeckOfCards::shuffle() {
     }
 }
 
-
 Card DeckOfCards::getCard(){
-    // cout << deck.size() << endl;
     Card tmp = deck.back();
     deck.pop_back();
     return tmp;
 }
-
-
 
 DeckOfCards::~DeckOfCards() {
 

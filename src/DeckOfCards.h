@@ -3,7 +3,7 @@
 
 #include "Card.h"
 #include<vector>
-//add
+
 using namespace std;
 const string cardGraphics[53] = 
     {
@@ -21,18 +21,14 @@ const string cardGraphics[53] =
         "res/cardSpadesA.png", "res/cardClubsA.png", "res/cardDiamondsA.png", "res/cardHeartsA.png",
         "res/cardSpades2.png", "res/cardClubs2.png", "res/cardDiamonds2.png", "res/cardHearts2.png",
         "res/cardBack_blue3.png"
-    };
+    }; // 52 first path -> card, the last one -> cardback
 class DeckOfCards {
 public:
-    
-
     std::vector<Card> deck;
 
     DeckOfCards();
     void shuffle();
-
     Card getCard();
-
     ~DeckOfCards();
 };
 #endif // DECKOFCARD_H

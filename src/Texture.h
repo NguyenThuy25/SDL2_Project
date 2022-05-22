@@ -5,7 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <string>
-#include "Game.h"
+// #include "Game.h"
 #include "GameObject.h"
 class Texture : public GameObject
 {
@@ -14,7 +14,7 @@ public:
 SDL_Window* gWindow = NULL;
 
 // The window renderer
-SDL_Renderer* gRenderer = Game::renderer;
+SDL_Renderer* gRenderer; //= Game::renderer;
 
 //Globally used font
 TTF_Font *gFont = NULL;

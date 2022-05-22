@@ -34,7 +34,7 @@ bool Texture::loadFromFile( std::string path )
         SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
         //Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface(Game::renderer, loadedSurface );
+        newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface );
         if( newTexture == NULL )
         {
             printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
@@ -72,7 +72,7 @@ bool Texture::loadFromRenderedText( std::string textureText, SDL_Color textColor
     else
     {
         //Create texture from surface pixels
-        mTexture = SDL_CreateTextureFromSurface(Game::renderer, textSurface );
+        mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface );
         if( mTexture == NULL )
         {
             printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
@@ -149,9 +149,9 @@ void Texture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
     //Render to screen
     GameObject gameOverbg("res/gameOverbg.png", 0, 0);
     gameOverbg.RenderButton(0, 0, 1280, 840, 0, false);
-    SDL_RenderCopyEx(Game::renderer, mTexture, clip, &renderQuad, angle, center, flip );
+    SDL_RenderCopyEx(gRenderer, mTexture, clip, &renderQuad, angle, center, flip );
     // SDL_Delay(500);
-    SDL_RenderPresent(Game::renderer);
+    SDL_RenderPresent(gRenderer);
     waitUntilKeyPressed();
 }
 

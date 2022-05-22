@@ -22,13 +22,7 @@ Three::Three(Card &a, Card &b, Card &c){
         }
     }
 }
-Three::Three(){
-	// Card a,b,c;
-	// t[0]=&a;
-	// t[0]=&b;
-	// t[0]=&c;
-}
-
+Three::Three(){}
 
 int Three::CompareThree(Three A,Three B){
 	if((A.maxCard->value)>(B.maxCard->value))

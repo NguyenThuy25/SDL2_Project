@@ -1,9 +1,7 @@
 #ifndef PAIR_H
 #define PAIR_H
 
-#include <iostream>
 #include "Card.h"
-// #include <vector>
 using namespace std;
 
 class Pair
@@ -19,7 +17,6 @@ class Pair
 	
 	int comparePair(Pair ,Pair);//compare 2 pair.maxCard.value, if former is bigger, return 1 , if latter
                                 //is bigger, return 0. And if the same, return (error message) -1
-    // void swap(Pair&,Pair&);
     static const int kindcode=2;
 };
 #endif

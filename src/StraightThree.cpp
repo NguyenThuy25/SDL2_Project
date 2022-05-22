@@ -24,10 +24,6 @@ StraightThree::StraightThree(Card& a, Card& b, Card& c){
     }
 }
 StraightThree::StraightThree(){
-	// Card a,b,c;
-	// t[0]=&a;
-	// t[0]=&b;
-	// t[0]=&c;
 }
 
 bool StraightThree::CompareStraightThree(StraightThree a, StraightThree b) {

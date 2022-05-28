@@ -21,7 +21,7 @@ Game Project (Card game) - Advanced programming - INT2215 3
 - The first player to run out of card is the winner.
 
 ## REFERENCE
-- Slide of my lecturer - Ms. Trần Thị Minh Châu
+- Slide of my lecturer - Ms. Tran Thi Minh Chau
 - Youtube video: https://www.youtube.com/channel/UCAM9ZPgEIdeHAsmG50wqL1g
 - Website: https://lazyfoo.net
 

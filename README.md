@@ -5,7 +5,7 @@ Nguyễn Thuỷ - UET
 ## INTRODUCTION
 Game Project (Card game) - Advanced programming - INT2215 3
 
-##GAME RULE
+## GAME RULE
 - Players include: user and 3 bots
 - There are 52 cards, everyone has 10 cards in their hand (devided randomly)
 - Game will random the first player.

@@ -20,6 +20,10 @@ Game Project (Card game) - Advanced programming - INT2215 3
 - If player 1 plays card and player 2, 3, 4 pass then player 1 can decide what type (single, pair, three, straight of three) to play.
 - The first player to run out of card is the winner.
 
+## DEMO
+[https://drive.google.com/file/d/1IOX2yVK_YfiWZUQyVZbfkPszQ-1SezvT/view?usp=sharing
+](Demo card game)
+
 ## REFERENCE
 - Slide of my lecturer - Ms. Tran Thi Minh Chau
 - Youtube video: https://www.youtube.com/channel/UCAM9ZPgEIdeHAsmG50wqL1g
